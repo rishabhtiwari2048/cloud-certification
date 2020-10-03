@@ -27,28 +27,19 @@
 
     Azure also supports scripting in Azure PowerShell and Azure CLI
 
-    You can use Azure Data Factory, Azure Storage Explorer, AzCopy tool, PowerShell and Visual Studio. If you are
-    uploading a file with size greater than 2GB then you must either use Azure PowerShell or Visual Studio.
+    You can use Azure Data Factory, Azure Storage Explorer, AzCopy tool, PowerShell and Visual Studio. If you areuploading a file with size greater than 2GB then you must either use Azure PowerShell or Visual Studio.
 
     AzCopy can handle file with maximum 1TB size. It automatically splits files if size exceeds 200 GB
 
-    You can not query data if you are storing data in Simple Azure Blob storage. In order to query data,
-    either move the data to a store that supports queries or set up a Azure Storage account for a data
-    lake storage account.
+    You can not query data if you are storing data in Simple Azure Blob storage. In order to query data, either move the data to a store that supports queries or set up a Azure Storage account for a data lake storage account.
 
-    Azure storage provides data security using multiple methods like access keys, shared access signatures
-    and Role Based Access Control (RBAC)
+    Azure storage provides data security using multiple methods like access keys, shared access signatures and Role Based Access Control (RBAC)
 
 3) Understand data storage in Azure Data Lake storage
     Azure Data Lake Storage is a Hadoop-compatible data repository that can store any size or type of data.
-    This storage service is available as Generation 1 (Gen1) or Generation 2 (Gen2). Data Lake Storage Gen1
-    users don't have to upgrade to Gen2, but they forgo some benefits.
+    This storage service is available as Generation 1 (Gen1) or Generation 2 (Gen2). Data Lake Storage Gen1 users don't have to upgrade to Gen2, but they forgo some benefits.
 
-    Data Lake Storage Gen2 users take advantage of Azure Blob storage, a hierarchical file system, and
-    performance tuning that helps them process big-data analytics solutions. In Gen2, developers can access
-    data through either the Blob API or the Data Lake file API. Gen2 can also act as a storage layer for a wide
-    range of compute platforms, including Azure Databricks, Hadoop, and Azure HDInsight, but data doesn't
-    need to be loaded into the platforms.
+    Data Lake Storage Gen2 users take advantage of Azure Blob storage, a hierarchical file system, and performance tuning that helps them process big-data analytics solutions. In Gen2, developers can access data through either the Blob API or the Data Lake file API. Gen2 can also act as a storage layer for a wide range of compute platforms, including Azure Databricks, Hadoop, and Azure HDInsight, but data doesn't need to be loaded into the platforms.
 
     Azure Data Lake Storage Gen 2 is used to support big data analytics.
 
@@ -63,14 +54,11 @@
           6) Zone-redundant storage
           7) Geo-redundant storage
 
-    You can ingest data in Azure Data Lake storage using Azure Data Factory, Azure Storage Explorer, Apache Sqoop,
-    AzCopy, Azure PowerShell, Visual Studio.
+    You can ingest data in Azure Data Lake storage using Azure Data Factory, Azure Storage Explorer, Apache Sqoop, AzCopy, Azure PowerShell, Visual Studio.
 
-    In Data Lake Storage Gen1, data engineers query data by using the U-SQL language. In Gen 2, use the Azure Blob
-    Storage API or the Azure Data Lake System (ADLS) API.
+    In Data Lake Storage Gen1, data engineers query data by using the U-SQL language. In Gen 2, use the Azure Blob Storage API or the Azure Data Lake System (ADLS) API.
 
-    Azure Data Lake Storage supports Azure Active Directory ACLs, RBAC and Firewall Rules. Apart from access control,
-    it also encrypts data at rest in order to boost data privacy.
+    Azure Data Lake Storage supports Azure Active Directory ACLs, RBAC and Firewall Rules. Apart from access control, it also encrypts data at rest in order to boost data privacy.
 
 4) Understand Azure Cosmos DB
     It is a globally distributed multi-modal database. You can deploy it using several API models. It currently
@@ -92,22 +80,17 @@
       d) Consistent Prefix
       e) Eventual
 
-    To do data ingestion, you can either use Azure Data Explorer or you can write an application that directly writes
-    data in Azure Cosmos DB. You can directly upload a JSON document or you can create one using Azure Portal.
+    To do data ingestion, you can either use Azure Data Explorer or you can write an application that directly writes data in Azure Cosmos DB. You can directly upload a JSON document or you can create one using Azure Portal.
 
-    You can use database objects to query data from Azure Cosmos DB. You can also use JavaScript Query API to query data from
-    Cosmos DB. There are other APIs also available using which you can work with your data stored in Cosmos DB.
+    You can use database objects to query data from Azure Cosmos DB. You can also use JavaScript Query API to query data from Cosmos DB. There are other APIs also available using which you can work with your data stored in Cosmos DB.
 
-    Data Security in Azure Cosmos DB is enforced using Firewall Rules, Data Encryption, RBAC, Azure Active Directory,
-    and Access Tokens.
+    Data Security in Azure Cosmos DB is enforced using Firewall Rules, Data Encryption, RBAC, Azure Active Directory, and Access Tokens.
 
 5) Understand Azure SQL Database
     Azure SQL database is a Managed Database Service in Azure. It supports relational as well as spatial and XML data.
     It is used in OLTP systems that can scale on demand. It is very secure and highly available service in Azure cloud.
 
-    You should use Azure SQL Database to develop solutions which require security and availability. It provides scalability
-    on demand. This service also reduces capital expenditure when it comes to provisioning new infrastructure. It comes with
-    Microsoft's service level agreements.
+    You should use Azure SQL Database to develop solutions which require security and availability. It provides scalability on demand. This service also reduces capital expenditure when it comes to provisioning new infrastructure. It comes with Microsoft's service level agreements.
 
     You can ingest data in Azure SQL database using programming languages, database management tools like SSMS or Azure Data Factory.
 
@@ -125,23 +108,19 @@
     Azure Synapse Analytics is a cloud-based data platform that brings together enterprise data warehousing and Big Data
     analytics. It can process massive amounts of data and answer complex business questions with limitless scale.
 
-    MPP - Massively parallel programming allows you to scale compute nodes independently of storage.
+    MPP - Massively parallel processing allows you to scale compute nodes independently of storage.
     DMS - Data Movement Service coordinates and transports data between compute nodes.
 
     Azure Synapse Analytics can also pause compute layer when its not in use.
 
-    Azure Synapse Analytics uses ELT approach to ingest large amounts of data. It has PolyBase technology to offload
-    complex calculations to cloud. Using PolyBase data engineers can apply stored procedures, views, labels and SQL to their
-    applications.
+    Azure Synapse Analytics uses ELT approach to ingest large amounts of data. It has PolyBase technology to offload complex calculations to cloud. Using PolyBase data engineers can apply stored procedures, views, labels and SQL to their applications.
 
     You can use T-SQL to query the data in Azure Synapse Analytics.
 
-    Azure Synapse Analytics supports both SQL Server Authentication and Azure Active Directory. We can also setup
-    Multifactor Authentication. It also supports security on row and column levels.
+    Azure Synapse Analytics supports both SQL Server Authentication and Azure Active Directory. We can also setup Multifactor Authentication. It also supports security on row and column levels.
 
 7) Understand Azure Stream Analytics
-    Data Streams - data which is constantly generated on regular intervals (for example every 10 seconds). Streaming
-    data has higher volume but lighter payload compared to non-streaming systems.
+    Data Streams - data which is constantly generated on regular intervals (for example every 10 seconds). Streaming data has higher volume but lighter payload compared to non-streaming systems.
 
     You can use Azure Stream Analytics to process streaming data from IoT sensors, Web logs etc.
 
@@ -150,33 +129,26 @@
     IoT Hub is a cloud gateway to connect to IoT devices.
     Azure Event Hub provide big data streaming services.
 
-    You can query data in Azure Stream Analytics you can use Stream Analytics query language. It is very much
-    similar to SQL language.
+    You can query data in Azure Stream Analytics you can use Stream Analytics query language. It is very much similar to SQL language.
 
-    Azure Stream Analytics provides data security on transport layer between device and IoT hub. It uses
-    shared key to secure data transfer. If you are storing data then in that case the storage service will
+    Azure Stream Analytics provides data security on transport layer between device and IoT hub. It uses shared key to secure data transfer. If you are storing data then in that case the storage service will
     provide data security.
 
 8) Understand Azure HDInsight
-    It allows us to ingest, process and analyze big data. It supports data science, warehousing, IoT and
-    batch processing.
+    It allows us to ingest, process and analyze big data. It supports data science, warehousing, IoT and batch processing.
     Azure HDInsight includes Apache Hadoop, Kafka, Storm, HBase, Spark.
 
     Data can be ingested using Hive.
 
-    Data processing is done using Map Reduce jobs writted in either Java or Python. You can also use Spark
-    notebooks to process the data in HDInsight.
+    Data processing is done using Map Reduce jobs written in either Java or Python. You can also use Spark notebooks to process the data in HDInsight.
 
     To query the data in Hadoop use Pig or Hive. To query data in Spark use Spark SQL.
 
     Hadoop supports encryption, Secure Shell (SSH), shared access signatures, and Azure Active Directory security.
 
 9) Understand Other Data Services
-    Azure Databricks : Databricks is a serverless platform that's optimized for Azure. It provides one-click
-    setup, streamlined workflows, and an interactive workspace for Spark-based applications.
+    Azure Databricks : Databricks is a serverless platform that's optimized for Azure. It provides one-click setup, streamlined workflows, and an interactive workspace for Spark-based applications.
 
-    Azure Data Factory : Its a cloud integration service which is used to move data between various data stores.
-    You can create data driven workflows using Azure Data Factory.
+    Azure Data Factory : Its a cloud integration service which is used to move data between various data stores. You can create data driven workflows using Azure Data Factory.
 
-    Azure Data Catalog : Analysts, Data Scientists and Data Engineers use data catalog to discover, understand and
-    consume data sources.
+    Azure Data Catalog : Analysts, Data Scientists and Data Engineers use data catalog to discover, understand and consume data sources.
