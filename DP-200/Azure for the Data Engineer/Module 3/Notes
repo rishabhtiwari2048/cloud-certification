@@ -1,16 +1,13 @@
-Data engineers who work on enterprise-level projects provide data to a variety of professionals, ranging from
-information workers to data scientists.
+Data engineers who work on enterprise-level projects provide data to a variety of professionals, ranging from information workers to data scientists.
 
 There are three main roles which are being sought in data engineering projects
   1) Data Engineer
   2) Data Scientist
   3) Artificial Intelligence (AI) Engineer
 
-Data Engineer is responsible for designing, developing, implementing and maintaining data solutions. He is
-responsible for getting, ingesting, transforming, validating and cleaning up of the data to meet business
+Data Engineer is responsible for designing, developing, implementing and maintaining data solutions. He is responsible for getting, ingesting, transforming, validating and cleaning up of the data to meet business
 requirement.
-Data Engineer is also responsible for data security and data availability of a  data solutions. He is responsible
-for connecting data source with their target services using ETL pipelines.
+Data Engineer is also responsible for data security and data availability of a  data solutions. He is responsible for connecting data source with their target services using ETL pipelines.
 
 Data Scientist performs advanced analytics on large amounts of data delivered by Data Engineer.
 
