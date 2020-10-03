@@ -1,0 +1,56 @@
+You must answer below questions in order to choose best storage solution for your application in Azure
+  1) How to classify your data
+  2) How your data will be used
+  3) How you can get best performance for your application
+
+Classify your data first
+  There are three broad categories of data which is used in day to day business operations
+    1) Structured - Data has strict structure and its stored in relation databases
+    2) Semi-structured - Data has loose structure making it flexible enough to accommodate changes without affecting
+                         storage that much. It is also referred to as NoSQL data or Non-relational data. The expression
+                         and structure of the data in this style is defined by a serialization language.
+
+    /*IMPORTANT*/ :- Data serialization language is a tool to exchange the non-relational data between two separate
+    systems. Software developers use serialization language to expression structure of the data. As long as same
+    serialization language is used on both sending and receiving end, data can be easily written, sent, received,
+    parsed and consumed without much efforts from application developers.
+    There are 3 most common serialization languages used as of now
+      a) XML - eXtensible Markup Language. Depends on angled braces <>
+      b) JSON - JavaScript Object Notation. Depends on curly braces {}
+      c) YAML - YAML Ain't Markup Language. Depends on new line separation and indentation
+    3) Unstructured - Data is in the binary format or in the format which does not support structure.
+
+Determine Operational Needs
+  What are your operational and performance requirements?
+
+Group Multiple operations in a transaction
+  You need to group a set of tasks in transaction in order to make sure all of them are completed in order
+  to make changes in the application data.
+
+  A transaction is a logical group of database operations that execute together.
+  Transaction properties
+    a) Atomicity
+    b) Consistency
+    c) Isolation
+    d) Durability
+
+    OLTP vs OLAP
+
+Choose a storage solution on Azure
+  Choosing the correct storage solution can lead to better performance, cost savings, and improved manageability.
+
+  /*IMPORTANT*/
+
+  The points given below can be used to determine right data storage option in a particular scenario. For example
+  In case of product catalog data,
+
+  Data classification: Semi-structured because of the need to extend or modify the schema for new products
+
+  Operations: Customers require a high number of read operations, with the ability to query on many fields within the database.
+    The business requires a high number of write operations to track the constantly changing inventory.
+
+  Latency & throughput: High throughput and low latency
+
+  Transactional support: Required
+
+  Recommended service: Azure Cosmos DB

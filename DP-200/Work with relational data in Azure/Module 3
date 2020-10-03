@@ -1,0 +1,89 @@
+# Create an Azure Database for PostgreSQL Server
+
+Azure Database for PostgreSQL is a relational database service in the Microsoft cloud. The Server
+software is based on community version of open source PostgreSQL database.
+
+Create an Azure Database for PostgreSQL server using Azure Portal
+  The server resource name is used to define the server endpoint name. For example, if the resource name
+  is mypgsqlserver, then the server name becomes mypgsqlserver.postgres.database.azure.com.
+
+  server name must be unique. It should be lowercase with letters, numbers and hyphens.
+  You can not give admin names like azure_superuser, azure_pg_admin, root, guest, public,
+  admin, administrator.
+
+Create an Azure Database for PostgreSQL using Azure CLI
+    az postgres server create [-h] [--verbose] [--debug]
+                              [--output {json,jsonc,table,tsv}]
+                              [--query JMESPATH]
+                              --resource-group RESOURCE_GROUP_NAME --name SERVER_NAME
+                              --sku-name SKU_NAME [--location LOCATION]
+                              --admin-user ADMINISTRATOR_LOGIN
+                              --admin-password ADMINISTRATOR_LOGIN_PASSWORD
+                              [--backup-retention BACKUP_RETENTION] --default 7 days
+                              [--geo-redundant-backup GEO_REDUNDANT_BACKUP]
+                              [--ssl-enforcement {Enabled,Disabled}]
+                              [--storage-size STORAGE_MB] --default is 5120 MB (5 GB) - valid storage size is increment of 1024 MB (1 GB) from here on till 1 TB
+                              [--tags [TAGS [TAGS ...]]]
+                              [--version VERSION] --major version that you would like to use
+                              [--subscription _SUBSCRIPTION]
+
+ /*IMPORTANT*/
+ /*Exercise*/
+  Step 1: Store name of the server in a variable.
+    serverName=wingtiptoys-$RANDOM
+  Step 2: Store the username in variable
+    userName=azureuser
+  Step 3: Create Azure Database for PostgreSQL server
+
+    az postgres server create \
+      --name $serverName \
+      --resource-group learn-e186843d-4a7c-4cfe-9eff-8c7a8463e3a7 \
+      --location centralindia \
+      --sku-name B_Gen5_1 \
+      --storage 20480 \
+      --backup-retention 15 \
+      --version 11 \
+      --admin-user $userName \
+      --admin-password "Rishabh10!"
+
+Sever security considerations
+  Network access can be restricted to a Network, Server or database level.
+    Accounts - Restrict database access
+    Virtual Network - Restrict network access
+    Firewall Rules - Restrict server access
+
+  Azure database for PostgreSQL supports native PostgreSQL Authentication.
+
+  Virtual Network - Subnets
+
+  PostgreSQL server listens to TCP requests on port 5432.
+
+  Firewall Rules
+  Following firewall rules will allow all the connections from internet
+  start IP address 0.0.0.0
+  end IP address 255.255.255.255
+
+  SSL Connections - SSL connections are used to make sure data is secure in transit.
+
+  /*IMPORTANT*/
+  Create server firewall rule using Azure CLI
+        az postgres server firewall-rule create \
+          --resource-group learn-e186843d-4a7c-4cfe-9eff-8c7a8463e3a7 \
+          --server <server-name> \
+          --name AllowAll \
+          --start-ip-address 0.0.0.0 \
+          --end-ip-address 255.255.255.255
+
+  Delete server firewall rule using Azure CLI
+        az postgres server firewall-rule delete \
+            --name AllowAll \
+            --resource-group learn-e186843d-4a7c-4cfe-9eff-8c7a8463e3a7 \
+            --server-name <name of server>
+
+
+Connecting to your server
+  psql is used from Azure Cloud shell to connect to your server. Please see below command,
+
+        psql --host=<server-name>.postgres.database.azure.com \
+        --username=<admin-user>@<server-name> \
+        --dbname=<database>

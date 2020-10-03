@@ -1,0 +1,84 @@
+# Provision an Azure SQL database to store application data
+
+What is Azure SQL Database?
+  Azure SQL databases are a Platform-as-a-Service (PaaS) offering, meaning
+  much less infrastructure and maintenance to manage yourself.
+
+Plan your Azure SQL Database
+  Setting up your Azure SQL database has following advantages,
+  Convenience
+  Cost
+  Scale
+  Security
+
+with Azure SQL Database, Microsoft Azure manages the hardware, software updates, and OS patches for you. We provide buying options to help you get the performance you need at a predictable cost. Azure SQL Database also comes with a firewall so that you can control access to your data.
+
+Create your Azure SQL Database
+  When you create your first Azure SQL database, you also create an Azure SQL logical server. Think of a logical server as an administrative container for your databases. You can control logins, firewall rules, and security policies through the logical server. You can also override these policies on each database within the logical server.
+
+There are two ways to choose performance of your database
+  1) DTU - Its an acronym for Database Transaction Unit. Its a measure of compute, storage and IO resources. There is also something which is known as
+  eDTU or elastic Database Transaction Unit.
+
+  2) vCores - Its an acronym for Virtual Core. It gives us more flexibility while configuring performance of the database.
+
+What are SQL elastic pool?
+  SQL elastic pools relate to eDTUs. They enable you to buy a set of compute and storage resources that are shared among all the databases in the pool. Each database can use the resources they need, within the limits you set, depending on current load.
+
+What is collation?
+  Collation refer to the rules that compare and sort data. By default the collation rule is SQL_Latin1_General_CP1_C1_AS
+
+  server name contoso-dev
+  admin name devadmin
+  password Rishabh10!
+
+What is azure cloud shell?
+  It is a browser based shell experience to manage and develop azure resources.
+  Think of cloud shell as an interactive console that runs in the cloud.
+  You can also access the shell from shell.azure.com
+
+az in the cloud shell stands for Azure CLI which is a command line interface to
+work with Azure resources.
+
+jq is a command line JSON parser.
+
+sqlcmd enables you to execute statements on SQL Server.
+
+/*VERY IMPORTANT may come in the exam*/
+
+a) To get the details of databases running in the logical server, type following command
+
+  az configure --defaults group=learn-510f7a6e-61ba-45ce-8546-2449d142605a sql-server=contoso-dev
+  --above command will setup default resource group and logical server
+  az sql db list
+  --this command will give list of databases in JSON format
+  az sql db list | jq '[.[] | {name: .name}]'
+  --this command will give you list of databases with the help of JSON parser
+  az sql db show --name contoso-dev
+  --this command will give you properties of database contoso-dev in JSON format
+  az sql db show --name contoso-dev | jq '{name: .name, maxSizeBytes: .maxSizeBytes, status: .status}'
+  --this command will give you name, size and status of selected database with the help of JSON parser.
+
+b) Connect to your database
+  az sql db show-connection-string --client sqlcmd --name contoso-dev
+
+  CREATE TABLE Drivers (DriverID int, LastName varchar(255), FirstName varchar(255), OriginCity varchar(255));
+  GO
+
+  SELECT name FROM sys.tables;
+  GO
+
+  INSERT INTO Drivers (DriverID, LastName, FirstName, OriginCity) VALUES (123, 'Zirne', 'Laura', 'Springfield');
+  GO
+
+  SELECT DriverID, OriginCity FROM Drivers;
+  GO
+
+  UPDATE Drivers SET OriginCity='Boston' WHERE DriverID=123;
+  GO
+
+  SELECT DriverID, OriginCity FROM Drivers;
+  GO
+
+  DELETE FROM Drivers WHERE DriverID=123;
+  GO

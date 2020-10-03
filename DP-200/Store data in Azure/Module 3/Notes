@@ -1,0 +1,96 @@
+# Connect an app to Azure storage.
+
+Explore Azure storage services
+  Microsoft Azure Storage is a managed service that provides durable, secure, and scalable storage in the cloud.
+
+  Important : A single azure subscription can hold up to 200 storage accounts and each storage account can hold
+  up to 500 TB of data.
+
+  Azure Data Service
+  There are 4 different types of data services which are available in Azure storage accounts
+
+  1) Azure Blobs : Ideal for storing text, image and audio/video files. It supports Azure data lake Storage Gen2.
+  Blob storage is ideal for:
+    a) Serving images or documents directly to a browser, including full static websites.
+    b) Storing files for distributed access.
+    c) Streaming video and audio.
+    d) Storing data for backup and restoration, disaster recovery, and archiving.
+    e) Storing data for analysis by an on-premises or Azure-hosted service.
+
+    There are 3 types of blobs,
+    a) Block Blobs : A block blob is used to store text or binary files up to ~5TB in size. We can store around
+                     50000 blocks each with maximum size of 100 MB.
+    b) Page Blobs : Page blobs hold random access files up 8TB in size. It is used as backing storage Virtual Hard Disk (VHD)
+                    images for Azure Virtual Machines. Each page in page blob can hold data of 512 bytes.
+    c) Append Blobs : These are made up of block blobs but they are optimized for append operations. These Blobs are
+                    used to hold log data. A single append blob can be up to 195 GB.
+
+  2) Azure Files : This data service is used to make highly scalable file share on cloud. This support SMB 3.0 protocol.
+
+  3) Azure Queues : The Azure Queue service is used to store and retrieve messages. Queue messages can be up to
+  64 KB in size, and a queue can contain millions of messages. Queues are generally used to store lists of
+  messages to be processed asynchronously.
+
+  How to create an Azure Storage Account using Azure CLI
+  ## Important Command
+    az storage account create --name demolalla --resource-group learn-63e732aa-89cf-4b11-bc3f-c0921c83d27a --location centralindia --kind StorageV2 --sku Standard_LRS --access-tier Hot
+
+    In the above command,
+    az storage account create --> Azure CLI command to create a new storage account
+    --name --> name of the storage account. Can be anything between 3 to 24 character long. Globally unique and contains only letters and numbers
+    --resource-group --> name of the resource group in which storage account will be provisioned
+    --location --> data center where this storage account will be provisioned. Below are some values for this attributes
+                  westus2
+                  southcentralus
+                  centralus
+                  eastus
+                  westeurope
+                  southeastasia
+                  japaneast
+                  brazilsouth
+                  australiasoutheast
+                  centralindia
+
+      In order to create a new app in Azure CLI use following command,
+      dotnet new console --name <name of the application>
+
+      to run the application from Azure CLI use following command,
+      dotnet run
+
+      to add WindowsAzure.Storage in your account run following command,
+      dotnet add package WindowsAzure.Storage
+
+      After creating Azure Storage account and adding client libraries in your application, you will need two
+      pieces of information to connect to Azure Storage account from your application
+      1) An Access Key : Each storage account has two access keys. Any of them can be used to connect to stroage account.
+      2) REST API Endpoint : The REST endpoint is a combination of your storage account name, the data type, and a known domain.
+      For example in case of Azure Blob it would be like https://[name].blob.core.windows.net/
+
+      You can combine these two pieces of information in Azure Storage Account connection strings and use it to
+      connect to your storage account from the application.
+
+      Shared Access Signatures (SAS)
+
+      You use touch tool to create a new file in Azure CLI
+      for example touch appsettings.json
+
+      You use code . command to open the file in Cloud shell for editing.
+
+      To get the connection string for your storage account, use the following command from Azure CLI
+
+      In order to see the connection string for your storage account, use the following command,
+
+      /*IMPORTANT*/
+      az storage account show-connection-string \
+      --name <name of the storage account> \
+      --resouce-group <name of the resource-group> \
+      --query connectionString
+
+    Azure Storage client library object model
+      The foundation of the storage account object model in the .NET Core client library is the class
+      CloudStorageAccount. The simplest way to initialize the object model is to use CloudStorageAccount.Parse
+      or CloudStorageAccount.TryParse to parse the connection string.
+
+    To delete an app use following command,
+
+    rm -r PhotoSharingApp

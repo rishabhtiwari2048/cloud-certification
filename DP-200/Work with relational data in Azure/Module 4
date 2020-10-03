@@ -1,0 +1,94 @@
+# Scale multiple azure SQL databases with SQL Elastic Pools
+  SQL elastic pools allow you to manage performance and cost of a collection of databases.
+
+  SQL database elastic pools are a cost-effective service that can manage and scale multiple
+  Azure SQL databases that have varying and unpredictable resource requirements.
+
+Create a SQL Elastic Pool
+  Software as a service (SaaS) providers usually have to react to unpredictable loads and performance requirements
+  of their databases.
+  Traditionally, in the scenario where loads are unpredictable and we do not know the demand before hand, we have
+  to either over-provision services that we need that will add unnecessary cost or under-provision services that
+  will reduce the cost but can impact application performance during peak loads.
+
+What is a SQL Elastic Pool?
+  SQL Elastic Pool is a resource allocation service that allows you to manage performance and cost of a collection
+  of databases. Using Elastic Pool, you can provision resources for a collection of databases and then add those
+  databases in the pool. After adding database in the pool, you can setup maximum resources limit for each database
+  inside the pool.
+  Once setup, all the databases of the pool will share the services assigned to group.
+
+When to use an Elastic Pool?
+  You can use Elastic Pool in scenario where you have a group of database which have low average utilization but have
+  occasional spikes in their usage. In this case, you can provision an elastic pool where you can allocate resources
+  less than or equal to sum of resources required during spikes of all databases.
+
+How many databases you can add to a pool?
+  It has been observed that if total resources required by individual databases to meet peak demand is more than 1.5 times
+  the capacity required for the elastic pool, then the pool will be cost effective.
+  It is recommended to add either 2 S3 databases or 15 S0 databases in a single pool in order to get potential cost savings.
+  Depending upon performance tier you can add up to 100 to 500 databases in single pool.
+
+Create an elastic pool
+  You can create elastic pool only in SQL Server. You can specify an existing server or can create a new server while provisioning elastic pool.
+  You can create Elastic Pool either by Azure Portal, Azure CLI using az elastic-pools create Command or Via PowerShell using New-AzSqlElasticPool Command.
+
+  /*IMPORTANT*/ : You can create multiple elastic pools on single SQL server.
+
+Add databases into Elastic Pool.
+  You can add databases into elastic pool by Azure Portal, Azure CLI and Azure PowerShell.
+  You can use Azure CLI az sql db create command and specify pool name in parameter --elastic-pool-name. This command can move
+  existing database into the pool or it will create a new database in the pool if it does not exists.
+  When using PowerShell, you can assign new databases to a pool using New-AzSqlDatabase and move existing databases using Set-AzSqlDatabase.
+
+  /*VERY VERY IMPORTANT*/
+  You can add existing Azure SQL databases from your Azure SQL server into the pool or create
+  new databases. And you can mix service tiers within the same pool.
+
+===============================================================================================================================================
+***********************************ELASTIC POOL EXERCISE***************************************************************************************
+===============================================================================================================================================
+
+Step 1: Create following helping variable to assist in Elastic pool creation through Azure CLI.
+
+ADMIN_LOGIN="ServerAdmin"
+RESOURCE_GROUP=learn-c3adbe25-c817-4bd6-8973-9b11c535d16f
+SERVERNAME=FitnessSQLServer-$RANDOM
+LOCATION=<location>
+PASSWORD=<password>
+
+Stpe 2: Create an SQL Server using following command using Azure CLI
+
+az sql server create \
+--name $SERVERNAME \
+--resource-group $RESOURCE_GROUP \
+--location $LOCATION \
+--admin-user $ADMIN_LOGIN \
+--admin-password $PASSWORD
+
+Step 3: Create a database in SQL Server using Azure CLI
+
+az sql db create \
+--resource-group $RESOURCE_GROUP \
+--server $SERVERNAME \
+--name FitnessParisDB
+
+Step 4: Switch to portal and create an SQL Elastic Pool
+
+Step 5: Manage SQL Elastic Pools performance and cost
+  SQL elastic pools can help reduce server costs. To make effective use of elastic pools, their
+  capacity must be configured correctly. To configure an elastic pool, we need to understand
+  how SQL server performance is measured and priced, using either a DTU-based or vCore-based purchasing model.
+
+  A) DTU Based pricing model
+  A database transaction unit (DTU) is a unit of measurement for the performance of a service tier in Azure and is based on a bundled measure of compute, storage, and IO resources. Compute sizes are expressed in terms of Database Transaction Units (DTUs) for single databases or elastic Database Transaction Units (eDTUs) for elastic pools.
+
+  If demand exceeds the available resources for your tier for any resource (CPU, storage or IO), the performance of your database is throttled. This model is best for customers who want simple, pre-configured resource options available in three tiers: basic, standard, and premium.
+
+  B) vCore Based pricing model
+  A virtual core (vCore) represents the logical CPU offered with an option to choose between generations of hardware and physical characteristics of hardware (for example, number of cores, memory, storage size).
+
+  The vCore-based purchasing model gives you flexibility and control over individual resource consumption and a straightforward way to translate on-premises workload requirements to the cloud. This model allows you to choose compute, memory, and storage based upon their workload needs within the general purpose or business critical service tier.
+
+  Review cost estimates
+  Azure portal shows you cost of your provisioned resources for the elastic pool as monthly bill for both DTU based an vCore based pricing model.

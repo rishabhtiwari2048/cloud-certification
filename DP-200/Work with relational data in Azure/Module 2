@@ -1,0 +1,78 @@
+# Migrate your relational data stored in SQL Server to Azure SQL Database.
+
+Azure Database Migration Service automates the task of migrating your databases
+to the Azure SQL Database service.
+
+There are following steps involved in a database migration project
+1) Pre-migration
+  a) Discovery - Identify all objects that rely on existing databases that will
+                 be migrated
+  b) Assessment - Check for the incompatibilities between your on premise SQL Server
+                 and Azure SQL database. Data Migration Assistant (DMA) helps in this
+                 case.
+  c) Convert - Prepare and deploy scripts to remove incompatibilities between your source
+               and target database.
+
+2) Migration
+   Use Azure Database Migration Service to migrate your schema data to Azure SQL database.
+   Now, Azure Database Migration Service can do it in two modes
+    a) Online - Your bulk of the data will be moved while your database is still in use. After this phase
+                data will be synced and application can move to Azure SQL database.
+    b) Offline - No more changes can be made in your source database once migration starts.
+                 Data is migrated and then your application will start using Azure SQL database.
+
+    If you choose Online mode then in that case you have two additional steps,
+    a) Sync - any changes made to the data in the source system after the migration are brought into the target database.
+    b) Cutover -  source database is taken offline and the new Azure SQL database becomes available.
+
+c) Post-migration
+    a) Check the source and target data
+    b) Run performance testing and validate if everything is working as expected
+
+Tools involved in the data migration,
+  1) Azure Database Migration Service -It runs on Azure Platform as opposed to being a client application like Azure Data Migration Assistant.
+  2) Data Migration Assistant - Its a client side tool can be hosted on Windows Compatible Workstation or Server.
+
+Steps to migrate a database from SQL Server running on an Azure Virtual Machine in Cloud to Azure SQL Database.
+
+Step 1) Connect to Azure Virtual Machine running SQL Server using RDP from your system
+
+Step 2) Disable IE Enhanced Security Configuration for Administrator in Local Server
+
+Step 3) Download install and run Data Migration Assistant on Virtual Machine
+
+Step 4) Create a new project in Azure Database Migration Ser and connect to SQL Server instance running on virtual Machine
+
+Step 5) Run checks for database incompatibilities and feature incompatibilities.
+
+Step 6) Resolve the incompatibilities before moving ahead
+
+Once all the incompatibilities are resolved, we are ready for migration. We can do migration in two modes
+
+1) Offline - In offline migration, source database on SQL Server instance is unavailable for the entire duration
+             of migration activity.
+2) Online - In online migration, source database on SQL Server is only unavailable during sync activity after the
+most of data has been migrated in the Azure SQL database. In the first part of online migration, migration Service
+takes the backup of source database and migrates it to the destination. After this source database is taken Offline
+and service syncs target with source using transaction log of the source database.
+This type of migration does the job with minimal downtime but its costly compared to offline migration.
+
+Step 7) Now for migration, in Virtual Machine open ADMS and create a migration type project. Choose schema only in Migration Scope.
+
+        a) Select source database
+        b) Select target Server
+        c) Select target database
+        d) Select database objects which you want to move
+        e) Click on Generate SQL Script
+        f) Click on deploy schema
+
+# Migrate a database with downtime by using Azure Database Migration Service
+Step 8) Provision azure database migration service in the same region where source database is located
+        a) Create a migration project
+        b) Provide source login credentials (SQL Server)
+        c) Provide destination login credentials (Azure SQL Database)
+        d) Set Source DB Read-Only and make sure you are not logged in to database anywhere else
+           otherwise migration will fail.
+        e) Select list of objects which you want to migrate
+        f) Run migration and after migration is successful connect to Azure SQL Database and check the data
+        

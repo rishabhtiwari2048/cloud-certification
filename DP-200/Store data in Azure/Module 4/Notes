@@ -1,0 +1,36 @@
+## Secure your Azure Storage Account
+
+Explore Azure Storage Security Features
+  1) Encryption at rest : All the data stored in azure storage is by default encrypted using 256-bit advanced
+     encryption standard (AES) cipher. Azure's storage service encryption (SSE) does this job.
+
+  2) Encryption in transit : You can enable HTTPS and SMB 3.0 or above protocol to enable transport layer security.
+
+  3) CORS Support : CORS stands for Cross Origin Resource Sharing. It allows web apps to access the resources from
+     a server at a different domain. It is an optional feature which you can enable in your storage account.
+
+  4) Role-based Access Control (RBAC) : Storage account support Azure Active Directory authentication and RBAC based
+     authorization for resource management and data operations.
+
+  5) Auditing Access : Using in-built Storage Analytics Service you can audit Azure Storage Access.
+
+Understand Storage Account Keys
+  In azure storage accounts shared keys are called as storage account keys. Azure creates two of these keys (Primary and
+  Secondary) for every storage account you create. The keys gives access to everything in account.
+
+Understand Shared Access Signature
+  You can use Shared Access Signature aka SAS to give access to third party application on your storage account.
+  There are two types of SAS,
+  1) Service Level SAS
+  2) Account Level SAS
+
+Control network access to your storage account
+  You can manage network access rules to your storage account from Azure Portal, Azure CLI and Azure Powershell.
+  From Azure Portal, you can make changes by clicking on Firewall and Virtual Networks.
+
+Understand Advanced Threat Protection for Azure Storage
+  Advanced Threat protection detects anomaly in access patterns of your storage account. It then notifies you
+  about any such event. As of now it is available for Blob Service.
+
+Understand Azure Data Lake Storage Security Features
+  Azure Data Lake Storage supports RBAC,ACL, Azure AD to make it a highly secure data storage solution.

@@ -1,0 +1,69 @@
+# Create an Storage Account
+  Decide how many storage account do you need
+    What is Azure Storage?
+    Azure storage is collection of four data services
+      a) Azure Files
+      b) Azure Blobs
+      c) Azure Queues
+      d) Azure Tables
+
+    What is a Storage Account?
+    A storage account is a container that groups a set of Azure Storage services together. Only data services
+    from Azure Storage can be included in a storage account (Azure Blobs, Azure Files, Azure Queues, and Azure Tables).
+    Deleting the storage account will store all data stored in it. A storage account is resource which is
+    included in Resource Group.
+
+    Storage Account Settings
+    A storage account defines a policy that applies to all the storage services in the account.
+    a) Subscription
+    b) Location
+    c) Performance
+        1) Standard: It allows you to have any data service (Blob, File, Queue, Table) and uses magnetic disk drives.
+        2) Premium : Premium storage account gives additional Performance over Standard using Solid State Drives SSD.
+    d) Replication :
+        1) LRS : Create 3 copies of data in same data center
+        2) GRS : Create 3 copies of data in different data centers around the world
+    e) Access Tier
+        1) Hot
+        2) Cool
+        3) Archived
+    f) Secure Transfer Required: A security feature that determines the supported protocols for access. Enabled requires
+    HTTPs, while disabled allows HTTP
+    g) Virtual networks: A security feature that allows inbound access requests only from the virtual network(s) you specify.
+
+    How many storage accounts do you need?
+    It depends on following factors,
+      1) Data Diversity
+      2) Cost Sensitivity
+      3) Tolerance for management overhead
+
+    Choose your account Settings
+      You need three pieces of information to create a storage account in azure
+        1) A name : Each storage account has a name. The name must be globally unique within Azure, use only
+        lowercase letters and digits and be between 3 and 24 characters.
+        2) Deployment Model : A deployment model is the system Azure uses to organize your resources. The model defines the API
+        that you use to create, configure, and manage those resources. Azure provides two deployment models:
+            a) Resource Manager: the current model that uses the Azure Resource Manager API
+            b) Classic: a legacy offering that uses the Azure Service Management API
+
+        Note: Most of the resources in Azure only support Resource Manager deployment model but in case of
+        storage accounts, virtual machines and virtual networks you have to choose from the two options.
+        Resource Manager deployment model supports Resource Group allows you to create, configure and manage
+        your storage services as a collection. This is not the case with Classic model.
+        Azure recommends use of Resource Manager Deployment model for all new resources.
+
+        3) Account kind: Storage account kind is a set of policies that determine which data services you can
+        include in the account and the pricing of those services. There are three kinds of storage accounts:
+            a) StorageV2 (general purpose v2): the current offering that supports all storage types and all of the latest features
+            b) Storage (general purpose v1): a legacy kind that supports all storage types but may not support all features
+            c) Blob storage: a legacy kind that allows only block blobs and append blobs
+
+        Microsoft recommends use of StorageV2 for all new storage accounts.
+
+    Choose your account creation tools
+      There are many tools available to create storage accounts in Azure. Below is the list of most popular
+      ones,
+      a) Azure Portal
+      b) Azure CLI
+      c) Azure Powershell
+      d) Management Client Libraries
