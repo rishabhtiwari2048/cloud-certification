@@ -57,3 +57,82 @@ az vm create \
     "resourceGroup": "learn-1fa093ac-a4ee-40f5-8814-c64fbc088999",
     "zones": ""
   }
+
+ Step 5: Connect to host using SSH and public IP address of virtual machine
+    ssh 104.45.236.161
+
+ Step 6: Install mssql-tools on VM to go ahead with exercise
+    echo 'export PATH="$PATH:/opt/mssql-tools/bin"' >> ~/.bash_profile
+    echo 'export PATH="$PATH:/opt/mssql-tools/bin"' >> ~/.bashrc
+    source ~/.bashrc
+    curl https://packages.microsoft.com/keys/microsoft.asc | sudo apt-key add -
+    curl https://packages.microsoft.com/config/ubuntu/16.04/prod.list | sudo tee /etc/apt/sources.list.d/msprod.list
+    sudo apt-get update
+    sudo ACCEPT_EULA=Y apt-get install -y mssql-tools unixodbc-dev
+
+There are a number of ways to control access to your SQL server over the network.
+
+a) Firewall Rules: You can configure firewall rules on server level as well as database level.
+There are various types of rules you can apply based on level.
+  a) Server level
+    1) Allow access to Azure Services
+    2) IP Address rules
+    3) Virtual Network rules
+
+  you can use Azure portal, Azure CLI and T-SQL to perform these operations
+
+  b) Database level
+    1) IP Address Rules
+
+  you can only use T-SQL to perform this operation
+
+/*IMPORTANT NOTE*/: Azure SQL Data Warehouse only supports server level firewall rules not the database level firewall rules.
+
+ Step 7: You can switch on access for all Azure Services within and outside of your subscription from security pane of SQL Server.
+
+ Step 8: To further restrict it, you can setup a database level firewall rule using T-SQL command.
+ EXECUTE sp_set_database_firewall_rule N'My Firewall Rule', ['from IP Address'], ['to IP Address']
+
+ Step 9: Use a server level firewall rule
+ You can setup a firewall rule with IP address of Virtual Machine that we are using to connect to SQL Database.
+ You can do it from the portal and you can then try to access the database from sqlcmd utility.
+
+ Step 10: Use a server level virtual network rule.
+ Firewall rules at database and server level are great but things start getting complicated when we add more resources in our setup or if some of them do not have static IP addresses.
+ In case of our VM, its configured with a dynamic IP address. Once address of VM is changed, access will break. In this case it is a better approach to create a virtual network rule for the SQL server. By this all resources connected to that virtual network will be able to access SQL server and its databases.
+
+Control who can access your database?
+ In the above exercise, we connected to the SQL Server and SQL database but we didn't access the data itself. This is where authorization and authentication comes in.
+ Authentication - It is the process of verifying an identity.
+ SQL Database supports two types of authentication,
+  1) SQL Authentication
+  2) Active Directory Authentication
+
+  Authorization: It refers to what an identity can do within an Azure SQL database. The process of granting authorization is same in both Azure AD and SQL authentication.
+
+  /*IMPORTANT*/: I could not perform this exercise because sandbox expired. Do it once you are revising.
+
+Secure your data in transit, at rest and on display
+  a) TLS Network Encryption
+      Azure SQL Database enforces Transport Layer Security (TLS) encryption at all times for all connections, which ensures all data is encrypted "in transit" between the database and the client.
+
+  b) Transparent Data Encryption (At rest)
+      Azure SQL Database protects your data at rest using transparent data encryption (TDE). TDE performs real-time encryption and decryption of the database, associated backups, and transaction log files at rest without requiring changes to the application. Using a database encryption key, transparent data encryption performs real-time I/O encryption and decryption of the data at the page level. Each page is decrypted when it's read into memory and then encrypted before being written to disk.
+
+      By default, TDE is enabled for all newly deployed Azure SQL databases. It's important to check that data encryption hasn’t been turned off, and older Azure SQL Server databases may not have TDE enabled.
+
+      We can check whether TDE is enabled or not using Azure Portal by following below path.
+      Azure Portal --> SQL Server --> Database --> Security --> Transparent Data Encryption
+/*NOTE: You can use Azure Security Center to monitor security of all your resources including Azure SQL Server Databases.*/
+
+  c) Dynamic Data Masking (Display)
+      You might have noticed when we ran our query in the previous unit that some of the information in the database is sensitive; there are phone numbers, email addresses, and other information that we may not want to fully display to everyone with access to the data.
+
+      Maybe we don't want our users to be able to see the full phone number or email address, but we'd still like to make a portion of the data available for customer service representatives to identify a customer. By using the dynamic data masking feature of Azure SQL Database, we can limit the data that is displayed to the user. Dynamic data masking is a policy-based security feature that hides the sensitive data in the result set of a query over designated database fields, while the data in the database is not changed.
+
+      /*IMPORTANT*/: I could not perform this exercise because sandbox expired. Do it once you are revising.
+
+Monitor your Databases
+
+  a) Azure SQL Database Auditing
+      
