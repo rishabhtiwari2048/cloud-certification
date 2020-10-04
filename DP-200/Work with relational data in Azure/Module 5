@@ -1,0 +1,59 @@
+# Secure your Azure SQL database
+
+Defense in depth is a strategy that employs a layered approach to slow the advance of an attack aimed at acquiring unauthorized access to information.
+
+===========================================================================
+================EXERCISE: SECURING AZURE SQL DATABASE======================
+===========================================================================
+
+Step 1: Activate Microsoft Learn sandbox in your Azure subscription and setup following variables
+# Set an admin login and password for your database
+export ADMINLOGIN='azureadmin'
+export PASSWORD='Rishabh10!'
+# Set the logical SQL server name. We'll add a random string as it needs to be globally unique.
+export SERVERNAME=server$RANDOM
+export RESOURCEGROUP=learn-1fa093ac-a4ee-40f5-8814-c64fbc088999
+# Set the location, we'll pull the location from our resource group.
+export LOCATION=$(az group show --name $RESOURCEGROUP | jq -r '.location')
+
+Step 2: Create Azure SQL Server with above variables in sandbox.
+
+az sql server create \
+    --name $SERVERNAME \
+    --resource-group $RESOURCEGROUP \
+    --location $LOCATION \
+    --admin-user $ADMINLOGIN \
+    --admin-password "$PASSWORD"
+
+Step 3: Now run the following to create the database called marketplaceDb
+
+az sql db create --resource-group $RESOURCEGROUP \
+    --server $SERVERNAME \
+    --name marketplaceDb \
+    --sample-name AdventureWorksLT \
+    --service-objective Basic
+
+Step 4: Get the connection string to connect to marketplaceDb.
+
+az sql db show-connection-string --client sqlcmd --name marketplaceDb --server $SERVERNAME | jq -r
+
+Step 4: Now create a virtual machine that will act as an app server in our setup. Use the following command.
+
+az vm create \
+  --resource-group $RESOURCEGROUP \
+  --name appServer \
+  --image UbuntuLTS \
+  --size Standard_DS2_v2 \
+  --generate-ssh-keys
+
+  {- Finished ..
+    "fqdns": "",
+    "id": "/subscriptions/eefbdf17-512e-4647-b975-31679b24fe24/resourceGroups/learn-1fa093ac-a4ee-40f5-8814-c64fbc088999/providers/Microsoft.Compute/virtualMachines/appServer",
+    "location": "westus",
+    "macAddress": "00-22-48-03-F8-8B",
+    "powerState": "VM running",
+    "privateIpAddress": "10.0.0.4",
+    "publicIpAddress": "104.45.236.161",
+    "resourceGroup": "learn-1fa093ac-a4ee-40f5-8814-c64fbc088999",
+    "zones": ""
+  }
