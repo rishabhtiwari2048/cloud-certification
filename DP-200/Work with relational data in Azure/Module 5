@@ -144,3 +144,15 @@ Monitor your Databases
          Analyze reports. You can find suspicious events, unusual activity, and trends.
 
   Audit logs are written to Append Blobs in an Azure Blob storage account that you designate. Audit policies can be applied at the server-level or database-level. Once enabled, you can use the Azure portal to view the logs, or send them to Log Analytics or Event Hub for further processing and analysis.
+
+  It is recommended to enable server level blob auditing and disable database level blob auditing unless there is different requirements for auditing on server level and database level.
+
+***Note: The storage account that you will use for storing audit logs should be in same region.
+
+Advanced Data Security for Azure SQL Database
+  Advanced Data Security (ADS) provides a set of advanced SQL security capabilities, including data discovery & classification, vulnerability assessment, and Advanced Threat Protection.
+  a) Data Discovery and classification
+  b) vulnerability Assessment
+  c) Advance Threat Protection
+
+***Note: Its a server level setting.
