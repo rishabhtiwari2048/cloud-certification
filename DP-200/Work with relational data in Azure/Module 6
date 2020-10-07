@@ -1,0 +1,99 @@
+# Develop and configure an ASP.NET application that queries an Azure SQL Database.
+
+Provisioning a SQL Database in Azure
+  Azure SQL database is a relation data store which is available as PaaS in Azure Cloud. It works on latest stabled version of Microsoft SQL Server.
+  You can provision this service by following methods,
+  1) Azure Portal
+  2) Azure CLI (az sql server create and az sql db create)
+  3) Azure Powershell  (New-AzSqlServer and New-AzSqlDatabase)
+
+When you create a database, you also specify how the data will be collated. A collation defines the rules that the database uses for sorting and comparing data
+
+sqlcmd -S <server>.database.windows.net -d <database> -U <username> -P <password>
+
+There are multiple ways to bulk import data in SQL Server
+Microsoft provides several tools that you can use to upload data to your SQL database:
+
+SQL Server Integration Services (SSIS)
+The SQL BULK INSERT statement
+The Bulk Copy Program (bcp) utility
+
+The BCP utility is most commonly used utility for doing bulk imports in the Azure SQL Database.
+  BCP utility requires three things to bulk import data into Database
+    a) Source where data is located
+    b) An existing table in the destination database
+    c) A format file that defines format of data and mapping of data to the columns of destination table
+
+BCP command to create a format file
+
+bcp <database>.dbo.mytable format nul -c -f mytable.fmt -t, -S <server>.database.windows.net -U <username> -P <password>
+
+Once you generate format file using above command, you should make necessary changes in the format file in order to match it with the source data that you want to import in the database. For example you may have to change the order of the fields in the format file because the field order is different than the destination table in the source.
+Once you are done with these changes, you can then start with import using BCP. You can use following command,
+
+bcp <database>.dbo.mytable in mydata.csv -f mytable.fmt -S <server>.database.windows.net -U <username> -P <password> -F 2
+
+here in indicates we are doing import in the database. if its out means export is happening from the database into file. -F 2 flat means we should start import from line 2 of the source file. Line no 1 is header.
+
+====================================================================================================
+                                  EXERCISE
+====================================================================================================
+
+--Step 1: Create a SQL server and a SQL Database in it.
+
+--Step 2: Define environment variables to assist in data ingestion and run followning command from Azure CLI
+bcp "$SERVERDB.dbo.courses" format nul -c -f courses.fmt -t, -S "$SERVERNAME.database.windows.net" -U $USERNAME -P $PASSWORD
+
+bcp "$SERVERDB.dbo.courses" in courses.csv -f courses.fmt -S "$SERVERNAME.database.windows.net" -U $USERNAME -P $PASSWORD -F 2
+
+
+bcp "$SERVERDB.dbo.modules" format nul -c -f modules.fmt -t, -S "$SERVERNAME.database.windows.net" -U $USERNAME -P $PASSWORD
+
+bcp "$SERVERDB.dbo.modules" in modules.csv -f modules.fmt -S "$SERVERNAME.database.windows.net" -U $USERNAME -P $PASSWORD -F 2
+
+bcp "$SERVERDB.dbo.studyplans" format nul -c -f studyplans.fmt -t, -S "$SERVERNAME.database.windows.net" -U $USERNAME -P $PASSWORD
+
+bcp "$SERVERDB.dbo.studyplans" in studyplans.csv -f studyplans.fmt -S "$SERVERNAME.database.windows.net" -U $USERNAME -P $PASSWORD -F 2
+
+sqlcmd -S "$SERVERNAME.database.windows.net" -d "$SERVERDB" -U $USERNAME -P $PASSWORD
+
+/*IMPORTANT*/ : You can use System.Data.Sqlclient library
+
+SqlConnection:- To create a database connection. This is an object which is instantiated to create a new database connection.
+SqlConnection.open() : This method is used to open the connection to the database.
+SqlConnection.close() : This method is used to close the connection to the database.
+
+/*Note*/: You can also use using statement to automatically close the connection.
+
+SqlCommand: This object is used to create a query that will be run on the database.
+SqlCommand.ExecuteNonQuery() : This is used to run SQL statements which do not return rows like DELETE or UPDATE.
+SqlCommand.ExecuteReader() : To run SELECT statements on the database.
+SqlDataReader : This object is returned by SqlCommand.ExecuteReader() method and holds the records returned by SELECT statement.
+SqlDataReader.Read() : This method is used to read data from SqlDataReader object.
+SqlException : To catch database related exceptions.
+SqlException.Errors : Property of SqlException
+Errors.SqlError : Type of SQL Errors
+
+WEBAPPNAME=educationapp-100
+az webapp up \
+    --resource-group learn-f6d35a0a-a7f3-4731-a75a-70b5813d7c8a \
+    --location centralus \
+    --sku F1 \
+    --name $WEBAPPNAME
+
+    {
+      "URL": "http://educationapp-100.azurewebsites.net",
+      "appserviceplan": "chromastone2806_asp_Windows_centralus_0",
+      "location": "centralus",
+      "name": "educationapp-100",
+      "os": "Windows",
+      "resourcegroup": "learn-f6d35a0a-a7f3-4731-a75a-70b5813d7c8a",
+      "runtime_version": "dotnetcore|2.1",
+      "runtime_version_detected": "2.1",
+      "sku": "FREE",
+      "src_path": "//home//chromastone2806//education"
+    }
+
+    az webapp up \
+    --resource-group learn-f6d35a0a-a7f3-4731-a75a-70b5813d7c8a \
+    --name educationapp-100
