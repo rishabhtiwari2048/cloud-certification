@@ -1,0 +1,49 @@
+# Create an Azure Cosmos DB built to Scale
+
+Create an Azure Cosmos DB account in Azure Portal
+  a) What is Azure Cosmos DB Account
+      An Azure Cosmos DB account is an Azure resource that acts as an organizational entity for your databases. It connects your usage to your Azure subscription for billing purposes.
+      /*Important*/ : Each account is associated with any ONE of the several data models Cosmos DB supports and you can create as many accounts as you need.
+
+      /*Note*/ :- SQL API is preferred if you are creating a new application using Azure Cosmos DB account.
+
+      Exercise :- Create an Azure Cosmos DB account from Azure Portal.
+
+What is a request unit?
+  Azure Cosmos DB measures throughput using request units (RU). Since usage is measured per second the unit of measure becomes Request Units per Second RU/s.
+  One request unit is equal to the cost of performing a GET request on 1 KB document stored in Cosmos DB using a Document ID. This is only select operation.
+  Creation, Insertion and Deletion related to document requires more operations thus more request units are required.
+
+Request Unit Considerations
+  While you estimate the number of RUs per second to provision, consider the following factors:
+
+  Item size: As the size of an item increases, the number of RUs consumed to read or write the item also increases.
+
+  Item indexing: By default, each item is automatically indexed. Fewer RUs are consumed if you choose not to index some of your items in a container.
+
+  Item property count: Assuming the default indexing is on all properties, the number of RUs consumed to write an item increases as the item property count increases.
+
+  Indexed properties: An index policy on each container determines which properties are indexed by default. To reduce the RU consumption for write operations, limit the number of indexed properties.
+
+  Data consistency: The strong and bounded staleness consistency levels consume approximately two times more RUs on read operations when compared to that of other relaxed consistency levels.
+
+  Query patterns: The complexity of a query affects how many RUs are consumed for an operation. Factors that affect the cost of query operations include:
+
+  The number of query results
+  The number of predicates
+  The nature of the predicates
+  The number of user-defined functions
+  The size of the source data
+  The size of the result set
+  Projections
+  Azure Cosmos DB guarantees that the same query on the same data always costs the same number of RUs on repeated executions.
+
+  Script usage: As with queries, stored procedures and triggers consume RUs based on the complexity of their operations. As you develop your application, inspect the request charge header to better understand how much RU capacity each operation consumes.
+
+Provisioning throughput for containers and databases
+  You can provision throughput for the database and share it between containers or you can provision throughput for the containers. Setting throughput for containers is most widely used options.
+
+Exceeding throughput limit
+  If you exceed throughput limit that is provisioned for the Cosmos DB account or container, your request will be rate limited thus increasing latency.
+  You can scale your throughput as per the demand from your application.
+  When you create an account, you can provision a minimum of 400 RU/s, or a maximum of 250,000 RU/s in the portal. If you need even more throughput, fill out a ticket in the Azure portal.
