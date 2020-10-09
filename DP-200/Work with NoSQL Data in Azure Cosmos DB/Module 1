@@ -47,3 +47,45 @@ Exceeding throughput limit
   If you exceed throughput limit that is provisioned for the Cosmos DB account or container, your request will be rate limited thus increasing latency.
   You can scale your throughput as per the demand from your application.
   When you create an account, you can provision a minimum of 400 RU/s, or a maximum of 250,000 RU/s in the portal. If you need even more throughput, fill out a ticket in the Azure portal.
+
+Choose a partition key for Cosmos DB
+
+  What is partition strategy?
+    If you continue to add new data to a single server or a single partition, it will eventually run out of space. A partitioning strategy enables you to add more partitions to your database when need them. This scaling strategy is called scale out or horizontal scaling.
+    A partition key defines the partition strategy, it's set when you create a container and can't be changed. Selecting the right partition key is an important decision to make early in your development process.
+
+  What is partition key?
+    A partition key is the value by which Azure organizes your data into logical divisions. It should aim to evenly distribute operations across the database to avoid hot partitions. A hot partition is a single partition that receives many more requests than the others, which can create a throughput bottleneck. For example a good partition key will be user_id or product_id.
+
+    /*IMPORTANT*/
+    The amount of required RU's and storage determines the number of required physical partitions for the container, which are completely managed by Azure Cosmos DB. When additional physical partitions are needed, Cosmos DB automatically creates them by splitting existing ones. There is no downtime or performance impact for the application.
+
+    The storage space for the data associated with each partition key can't exceed 20 GB, which is the size of one physical partition in Azure Cosmos DB. So, if your single userID or productId record is going to be larger than 20 GB, think about using a composite key instead so that each record is smaller.
+
+Create a database and container in Azure Cosmos DB using Portal.
+    Cosmos DB account - Data Explorer - New Container - Database Id - Container Id - Partition Key
+
+Create a database and container in Azure Cosmos DB using Azure CLI
+    Step 1: Create a COSMOS DB account. To create a COSMOS DB account define a new variable as below,
+        export NAME="rishabh-cosmosdb-2"
+
+    Step 2: Create account using above variable. Below is the Azure CLI command to create Cosmos DB account.
+        az cosmosdb create \
+         --name $NAME \
+         --kind GlobalDocumentDB \
+         --resource-group learn-6c80db08-c98f-40c2-ac53-acac20d0e53b
+
+    Step 3: Once your account is created in Step 2. You then go ahead with creation of Database and Container in Azure CLI. You should use following command,
+        az cosmosdb sql database create \
+            --account-name $NAME  \ #Coming from step 2
+            --name "Products"  \
+            --resource-group learn-6c80db08-c98f-40c2-ac53-acac20d0e53b
+
+    Step 4: Once you are done with the database creation. Create a container in the database with partition key using following command.
+        az cosmosdb sql container create \
+            --account-name $NAME \
+            --database-name "Products" \
+            --name "Clothing" \
+            --partition-key-path "/productId" \
+            --throughput 1000 \
+            --resource-group learn-6c80db08-c98f-40c2-ac53-acac20d0e53b
