@@ -1,0 +1,55 @@
+# Choose the appropriate API for Azure Cosmos DB
+
+ At lowest level, Azure Cosmos DB stores data in atom-record-sequence (ARS) format.
+
+ Azure Cosmos DB is globally distributed and elastically scalable database. It also supports five different consistency levels,
+  1) Strong
+  2) Bounded staleness
+  3) Session
+  4) Consistent Prefix
+  5) Eventual
+
+ Following APIs are provided by Azure Cosmos DB.
+
+ 1) Core SQL API - This API stores and retrieves data from JSON. It supports SQL like language and has following constructs,
+  SELECT
+  FROM
+  WHERE
+  BETWEEN
+  COUNT
+  SUM
+  MIN
+  MAX
+  ORDER BY
+
+2) MongoDB API - Azure Cosmos DB's API for MongoDB supports the MongoDB wire protocol. This API allows existing MongoDB client SDKs, drivers, and tools to interact with the data transparently, as if they are running against an actual MongoDB database.
+Currently this API supports MongoDB Wire Protocol version 3.2
+
+3) Cassendra API - Azure Cosmos DB's support for the Cassandra API makes it possible to query data by using the Cassandra Query Language (CQL), and your data will appear to be a partitioned row store. Just like the MongoDB API, any clients or tools should be able to connect transparently to Azure Cosmos DB; only your connection settings should need to be updated. Cosmos DB's Cassandra API currently supports version 4 of the CQL wire protocol
+
+For developers who have experience with the CQL query language, Azure Cosmos DB provides several familiar CQL statements and clauses; for example:
+
+CREATE KEYSPACE
+CREATE TABLE
+ALTER TABLE
+USE
+INSERT
+SELECT
+UPDATE
+BATCH (Only unlogged commands are supported)
+DELETE
+
+4) Azure Table API - Azure Cosmos DB's Azure Table API provides support for applications that are written for Azure Table Storage that need premium capabilities like global distribution, high availability, scalable throughput. The original Table API only allows for indexing on the Partition and Row keys; there are no secondary indexes. Storing table data in Cosmos DB automatically indexes all the properties, and requires no index management.
+Querying is accomplished by using OData and LINQ queries in code, and the original REST API for GET operations.
+
+5) Gremlin API - Choosing Gremlin as the API provides a graph-based view over the data. A graph-based view on the database means data is either a vertex (which is an individual item in the database), or an edge (which is a relationship between items in the database). You typically use a traversal language to query a graph database, and Azure Cosmos DB supports Apache Tinkerpop's Gremlin language.
+
+
+Analyze the decision criteria
+  New projects being created from scratch - Core SQL APIs
+  Existing MongoDB, Cassandra, Azure Table, or Gremlin data - MongoDB API, Cassandra API, Azure Table API, Gremlin APIs
+  Analysis of the relationships between data	- Gremlin API
+  All other scenarios	- Azure SQL API
+
+Use Core SQL to Store Product Catalog
+  
