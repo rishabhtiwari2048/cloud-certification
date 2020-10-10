@@ -52,4 +52,11 @@ Analyze the decision criteria
   All other scenarios	- Azure SQL API
 
 Use Core SQL to Store Product Catalog
-  
+
+Use the Gremlin API as recommendation engine
+
+Use MongoDB to import historical order data
+
+Use Cassandra for Web Analytics
+
+Use Azure Table API to store IoT
