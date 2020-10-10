@@ -1,0 +1,108 @@
+# Insert and Query data in your Azure Cosmos DB database
+
+====================================================================================================
+***********************EXERCISE*********************************************************************
+====================================================================================================
+
+Step 1: Create a Cosmos DB account, database and container in Azure using Azure CLI.
+
+      a) Create environment variables to store necessary data.
+         export NAME=cosmos2048
+
+      b) Create Azure Cosmos DB account using following CLI command.
+
+        az cosmosdb create \
+        --name $NAME \
+        --resource-group learn-3a7f8670-576f-4c42-a2d7-a6d771e2f714 \
+        --kind GlobalDocumentDB
+
+      c) Create a database with Core SQL API
+
+       az cosmosdb sql database create \
+       --account-name $NAME \
+       --name "Products"
+       --resource-group learn-3a7f8670-576f-4c42-a2d7-a6d771e2f714
+
+      d) Create a database container
+
+       az cosmosdb sql container create \
+       --account-name $NAME \
+       --database-name "Products" \
+       --name "Clothing" \
+       --partition-key-path "/productId" \
+       --throughput 1000 \
+       --resource-group learn-3a7f8670-576f-4c42-a2d7-a6d771e2f714
+
+ Step 2: Add data using Data Explorer
+
+    What is Data Explorer?
+      The Azure Cosmos DB Data Explorer is a tool included in the Azure portal that is used to manage data stored in an Azure Cosmos DB.It provides a UI for navigating and viewing data, querying and modifying data, and creating and running stored procedures.
+
+    Go to Azure Portal -> Cosmos DB -> Data Explorer
+
+Explore SQL Query Types
+
+/*VERY IMPORTANT : The statements below are similar to relation SQL but they are not exactly same. Please read this section once again very carefully in revision in order to avoid any confusion in the exam*/
+
+    1) SELECT
+    2) FROM: The FROM clause specifies the data source upon which the query operates. It can be a container, an array or an object
+    /*Note: A container can be aliased with the AS keyword and after alias is defined you can not use Original name of container in query*/
+        eg. SELECT * FROM Products AS p;
+    3) WHERE :The WHERE clause specifies the conditions that the source JSON documents must satisfy to be included as part of the result.
+    4) ORDER BY: The ORDER BY clause enables you to order the results in ascending or descending order.
+    5) JOIN : The JOIN clause lets you perform inner joins with the document and the document subroots.
+
+    /*====IMPORTANT====*/
+    6) Geospatial queries : Geospatial queries enable you to perform spatial queries using GeoJSON Points. Using the coordinates in the database, you can calculate the distance between two points and determine whether a Point, Polygon, or LineString is within another Point, Polygon, or LineString.
+
+    /*IMPORTANT In CORE SQL API of Cosmos DB, names of the database objects are not case sensitive, Queries given below will return same records
+      SELECT * FROM Products p WHERE p.id="1"
+      SELECT * FROM PRoducts p WHERE p.id="1"
+
+    Note: in Core SQL API, all the attributes of JSON are case sensitive.
+    */
+
+    /*IMPORTANT Never use semi-colon (;) in Data Explorer while writing SQL queries in CosmosDB following query will throw an error
+    SELECT p.productId, p.price, p.description
+    FROM Products p
+    ORDER BY p.price ASC; ---Semi colon is problem here.
+    */
+
+Define Store procedures and user defined functions
+
+    a) Stored Procedures Basics
+    Stored procedures perform complex transactions on documents and properties. Stored procedures are written in JavaScript and are stored in a container on Azure Cosmos DB. By performing the stored procedures on the database engine and close to the data, you can improve performance over client-side programming.
+
+    Stored procedures are the only way to achieve atomic transactions within Azure Cosmos DB; the client-side SDKs do not support transactions.<---- Please keep this in mind
+
+    Performing batch operations in stored procedures is also recommended because of the reduced need to create separate transactions.
+
+    Following is the example of stored procedure
+    function helloWorld()
+     {
+          var context = getContext();
+          var response = context.getResponse();
+          response.setBody("Hello, World");
+
+     }
+
+     b) User Defined Functions Basic
+     UDFs are used to extend the Azure Cosmos DB SQL query language grammar and implement custom business logic, such as calculations on properties and documents. UDFs can be called only from inside queries and, unlike stored procedures, they do not have access to the context object, so they cannot read or write documents.
+
+     Following is the example of User Defined Functions
+     function producttax(price) {
+          if (price == undefined)
+              throw 'no input';
+
+          var amount = parseFloat(price);
+
+          if (amount < 1000)
+              return amount * 0.1;
+          else if (amount < 10000)
+              return amount * 0.2;
+          else
+              return amount * 0.4;
+      }
+
+/*Note : Azure Cosmos DB Core SQL API also supports Triggers along with Stored Procedures and Userd Defined Functions (UDFs)*/
+/*Question : How do we differentiate between a Stored Procedure and an User Defined Function stored in Azure Cosmos DB container*/
