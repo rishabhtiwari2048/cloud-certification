@@ -1,0 +1,55 @@
+# Store and Access NoSQL Data with Azure Cosmos DB and the Table API
+
+Note : An entity, in a NoSQL table, is the equivalent of a row in a relational database table.
+
+Tables in Azure Storage can scale to large quantities of data; you can store any number of tables and any number of entities in a table. The only limits are the capacity of the storage account, which depends on the type of storage account you created. For example, a standard storage account can store 2 PB of data in US and European data centers, or 500 TB in other locations.
+
+Azure storage accounts replicate data to multiple locations to ensure high-availability. You can choose from the following types of replication in a storage account:
+Locally Redundant Storage (LRS)
+Zone Redundant Storage (ZRS)
+Geo Redundant Storage (GRS)
+Read Access-Geo Redundant Storage (RGRS)
+
+/*Note: With geo-redundant storage, data in the secondary region is not readable unless an outage causes Azure to fail-over to that region. Under normal circumstances, all clients must connect to the primary region to access data.*/
+
+
+/*VERY IMPORTANT - Read carefully during revision*/
+Differences between Azure Storage tables and Azure Cosmos DB tables
+There are some differences in behavior between Azure Storage tables and Azure Cosmos DB tables to remember if you are considering a migration. For example:
+
+You are charged for the capacity of an Azure Cosmos DB table as soon as it is created, even if that capacity isn't used. This charging structure is because Azure Cosmos DB uses a reserved-capacity model to ensure that clients can read data within 10 ms. In Azure Storage tables, you are only charged for used capacity, but read access is only guaranteed within 10 seconds.
+Query results from Azure Cosmos DB are not sorted in order of partition key and row key as they are from Storage tables.
+Row keys in Azure Cosmos DB are limited to 255 bytes.
+Batch operations are limited to 2 MBs.
+Cross-Origin Resource Sharing (CORS) is not currently supported by Azure Cosmos DB.
+Table names are case-sensitive in Azure Cosmos DB. They are not case-sensitive in Storage tables.
+
+How to migrate an app to Azure Cosmos DB?
+
+a) The Azure Cosmos DB data migration tool
+b) AzCopy
+
+=====================================================================================================
+                                       EXERCISE
+=====================================================================================================
+
+Move an app into Azure Cosmos DB Table Storage
+
+Step 1: Create an storage account from Azure Portal
+
+Step 2: Create app using Cloud Shell
+        mkdir lensesapp
+
+        git clone https://github.com/MicrosoftDocs/mslearn-store-access-data-cosmos-table-api lensesapp
+
+Step 3: Connect the app with Storage Account that we create in Step 1 using connection string
+
+        Copy the connection string for Azure Storage account from Azure Portal and put it in the appsettings.json file in lensesapp and save.
+
+Step 4: Run the lenses app to populate the lenses table
+
+        dotnet run PopulateTable
+
+Step 5: To display the list of Azure Table run the following command,
+
+        dotnet run DisplayTable
