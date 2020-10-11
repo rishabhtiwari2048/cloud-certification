@@ -53,3 +53,16 @@ Step 4: Run the lenses app to populate the lenses table
 Step 5: To display the list of Azure Table run the following command,
 
         dotnet run DisplayTable
+
+Step 6: Create an Azure Cosmos DB database using Azure Portal
+
+Step 7: Switch the lenses app to Azure Cosmos DB
+          Copy the PRIMARY CONNECTION STRING from Azure Cosmos DB account in Connection String variable of appsettings.json file. After this save and close the editor
+
+Step 8: Populate data in Azure Cosmos DB account.
+
+        dotnet run PopulateTable
+
+        dotnet run DisplayTable
+
+Step 9: Verify the same using Azure Portal
