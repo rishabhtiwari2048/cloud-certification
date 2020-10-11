@@ -1,0 +1,211 @@
+# Store and access graph data in Azure Cosmos DB with Graph API
+
+Determine if Graph database fits the data needs of your application
+
+  a) What is Graph Database?
+      1) What is Graph?
+        Graph is a structure which consists of vertices and edges. Both of them can have arbitrary number of properties.
+
+    The data model which is used to store data in form of Graphs is known as Property Graph Model and Azure Cosmos DB supports this model.
+
+  b) Strengths of Graph Databases
+      1) Performance: As compared to data stored in relational databases, graph databases have better performance when complex queries are applied on them.
+
+      2) Flexibility : Graph databases have very flexible schema and new properties can be added without affecting application performance.
+
+  c) Weakness of Graph Databases
+      Graph databases are not efficient in handling large number of read/write transactions like relational databases.
+      Performance of the database totally depends on the way relationships have been established between different objects in the database.
+
+  In order to map you data on a graph database, you have to divide you data in three separate parts,
+  1) Vertices (Nouns) e.g. Customer, Product etc.
+  2) Relationships (Verbs) e.g. Likes, Buys etc.
+  3) Properties : Different key-value pairs which will be assigned to Vertices and Relationships in the database.
+
+Build an application that stores Graph data in Cosmos DB using Gremlin API
+  Azure Cosmos DB's Gremlin API supports storage and operation on Graph data.
+
+  a) What is Gremlin Graph Traversal Language?
+    The Gremlin Graph Traversal Language or Gremlin in a high-performance language used to traverse and query graph data. It's described as a functional, data-flow language that enables users to express complex traversals for their application's property graph.
+
+*****************************************************************************************************
+                                              EXERCISE
+*****************************************************************************************************
+
+Step 1: Create an Azure Cosmos DB account with Gremlin API from Azure Portal
+        -- Use create new resource and Gremlin API option.
+
+Step 2: Create a graph database
+        -- Give name of the database and Graph
+        -- Copy the primary key from "Keys" section of Azure Cosmos DB Account's home page
+
+Step 3: Go to cloud shell and create a new .NET console app using following command,
+        -- dotnet new console -n <name of the app>
+            e.g. dotnet new console -n GremlinApp
+
+Step 4: Add the necessary packages to your app for Gremlin.net and Microsoft.Extensions.Configuration.
+
+        dotnet add package Gremlin.net
+        dotnet add package Microsoft.Extensions.Configuration
+        dotnet add package Microsoft.Extensions.Configuration.FileExtensions
+        dotnet add package Microsoft.Extensions.Configuration.Json
+        dotnet restore
+
+Step 5: Create a file for your application settings and open it using code. command.
+        touch appsettings.json
+
+Step 7: Copy paste below code
+        {
+        "AzureConfig": {
+        "HostName" : "rishabh-cosmosdb.gremlin.cosmos.azure.com",
+        "Port" : "443",
+        "AuthKey" : "dhlFhLon39izaK9lXkQtn2dDQY8qtIK7W6VyoKRcLDYbN6hWzqjVJt3J9wOluRhzGju6sYjSsiLf1IEtn852rg==",
+        "Database" : "sample-database",
+        "Collection" : "sample-graph"
+        }
+        }
+
+Step 8: Open your Program.cs file in the editor, and add the following using statements to the beginning of the file.
+        using System;
+        using System.Threading.Tasks;
+        using Gremlin.Net.Driver;
+        using Gremlin.Net.Driver.Exceptions;
+        using Gremlin.Net.Structure.IO.GraphSON;
+        using Microsoft.Extensions.Configuration;
+        using Microsoft.Extensions.Configuration.FileExtensions;
+        using Microsoft.Extensions.Configuration.Json;
+
+Step 9: Replace the Main() method with following code.  This method reads your configuration settings from your appsettings.json file, initializes the connection to your Azure Cosmos DB account using the Gremlin.NET driver, sends a graph query to the server, and displays the number of items that were returned by the query.
+          static void Main(string[] args)
+          {
+          try
+          {
+          if (args.Length!=1)
+          {
+           Console.WriteLine("Please enter a Gremlin/Graph Query.");
+          }
+          else
+          {
+           var azureConfig = new ConfigurationBuilder()
+              .SetBasePath(Environment.CurrentDirectory)
+              .AddJsonFile("appsettings.json", optional: false, reloadOnChange: false)
+              .Build()
+              .GetSection("AzureConfig");
+           var hostname = azureConfig["HostName"];
+           var port = Convert.ToInt32(azureConfig["Port"]);
+           var authKey = azureConfig["AuthKey"];
+           var database = azureConfig["Database"];
+           var collection = azureConfig["Collection"];
+           var gremlinServer = new GremlinServer(
+              hostname, port, enableSsl: true,
+              username: $"/dbs/" + database + "/colls/" + collection,
+              password: authKey);
+           using (var gremlinClient = new GremlinClient(gremlinServer, new GraphSON2Reader(), new GraphSON2Writer(), GremlinClient.GraphSON2MimeType))
+           {
+              var resultSet = AzureAsync(gremlinClient, args[0]);
+              Console.WriteLine("\n{{\"Returned\": \"{0}\"}}", resultSet.Result.Count);
+           }
+          }
+          }
+          catch (Exception ex)
+          {
+          Console.WriteLine("EXCEPTION: {0}", ex.Message);
+          }
+          }
+
+Step 10: Add a new AzureAsync() method after Main() method with the following code. This method will execute the query and return a result set that the Main() method will use to determine the number of nodes that were returned by the query.
+
+        private static Task<ResultSet<dynamic>> AzureAsync(GremlinClient gremlinClient, string query)
+        {
+           try
+           {
+              return gremlinClient.SubmitAsync<dynamic>(query);
+           }
+           catch (ResponseException ex)
+           {
+              Console.WriteLine("EXCEPTION: {0}", ex.StatusCode);
+              throw;
+           }
+        }
+
+Step 11: Save and exit coding environment using Ctrl+S and Ctrl+Q and execute following command.
+
+      dotnet run
+
+      it should prompt you to enter a query.
+
+Step 12: In order to make sure that graph database is empty, run the following command,
+
+      dotnet num "g.V().drop()"
+
+Step 13: Run the following commands to add product nodes in the database.
+
+      dotnet run "g.addV('Product').property('id', 'p1').property('name', 'Phone Charger').property('price', 12.99)"
+      dotnet run "g.addV('Product').property('id', 'p2').property('name', 'USB C Cable Charger').property('price', 8.99)"
+      dotnet run "g.addV('Product').property('id', 'p3').property('name', 'Gardening Gloves').property('price', 2.99)"
+
+Step 14: Run the following commands to add category nodes in the database. Using these two node types, we will enter relationship data in graph database.
+
+      dotnet run "g.addV('Category').property('id', 'c1').property('name', 'Mobile Phones')"
+      dotnet run "g.addV('Category').property('id', 'c2').property('name', 'Gardening')"
+
+Step 15: Verify that all nodes have been added using following command.
+
+      dotnet run "g.V()"
+
+Step 16: Now add some product to category relationships to your database. To do so, run the following commands:
+
+      dotnet run "g.V('p1').addE('belongsto').to(g.V('c1'))"
+      dotnet run "g.V('p2').addE('belongsto').to(g.V('c1'))"
+      dotnet run "g.V('p3').addE('belongsto').to(g.V('c2'))"
+
+Step 17: Verify that all of your edges/relationships have been added to your database. To do so, run the following command:
+
+      dotnet run "g.E()"
+
+Examin your data in Azure Portal
+    Azure Cosmos DB Account --> Data Explorer --> Database --> Container --> Graph
+
+Query graph data from an application using Gremlin API
+
+  Apache Tinkerpop's graph traversal language (aka Gremlin) can be used to execute queries on graph data.
+
+====================================================================================================
+                                      EXERCISE
+====================================================================================================
+
+We will be using the same .NET application that we created in earlier exercise.
+
+Step 1: Add additional package in your application. Run following commands to do so,
+        dotnet add package Newtonsoft.Json
+        dotnet restore
+
+Step 2: Add following lines of code in Program.cs
+        using Newtonsoft.Json;
+
+Step 3: Modify Main() method by inserting the following lines of code on the line after the Console.WriteLine("\n{{\"Returned\": \"{0}\"}}", resultSet.Result.Count);. This code will serialize the JSON returned from the queries and add it to the output. Save and close your work.
+
+        foreach (var result in resultSet.Result)
+        {
+        string jsonOutput = JsonConvert.SerializeObject(result);
+        Console.WriteLine("{0}",jsonOutput);
+        }
+
+Step 4: dotnet run "g.V()" ----> This will return all nodes
+
+Step 5: dotnet run "g.E()" -----> This will return all edges
+
+Step 6: dotnet run "g.V().count()" -----> Count the number of vertices in the graph
+        dotnet run "g.E().count()" -----> Count the number of vertices in the graph
+
+Step 7: dotnet run "g.V().hasLabel('Category')" -----> Display all the nodes with "Category" Label
+        dotnet run "g.V().hasLabel('Product').has('id','p1')" -----> Display all the nodes with "Category" Label and having property "id" as "p1"
+
+Step 8: dotnet run "g.V().hasLabel('Category').values('name')" ----> Return names of the nodes who has "Category" as Label
+        dotnet run "g.V().hasLabel('Product').values('name','price')" ----> Return name and price of the nodes who has "Product" as Label
+
+Step 9: dotnet run "g.V().hasLabel('Product').order().by('name', incr).values('name','price')" ---> Print name and price of nodes having Label as "Product" and order them in incrementing order of their "name" property.
+        dotnet run "g.V().hasLabel('Product').order().by('price', decr).values('name','price')" ---> Print name and price of nodes having Label as "Product" and order them in decrementing order of their "price" property.
+
+Step 10: Update property of vertices
+        dotnet run "g.V('p1').property('price', 15.99)" ---> update the "price" property of node "p1" with value 15.99
