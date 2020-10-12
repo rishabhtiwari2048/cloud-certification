@@ -1,0 +1,51 @@
+# Build a .NET core app for Azure Cosmos DB using Visual Studio Code
+
+=====================================================================================================                                   EXERCISE
+=====================================================================================================
+
+Step 1: Create Azure Cosmos DB resources in Visual Studio Code
+        a) Install Visual Studio Code
+        b) Install Azure Extension for Visual Studio Code
+        c) Login using same credentials which you used to login for tutorials
+        d) Using Azure Database extension create a new Azure Cosmos DB account in the sandbox
+        e) Once Azure Cosmos DB account is created, create a new database in that account and add a new collection to that database.
+
+Step 2: Setup your app in Visual Studio Code
+        a) Create a console app
+            1) Create a new folder
+            2) Enable Auto Save by clicking on this option in File menu
+            3) dotnet new console
+            4) Add following packages in your project in order to work with Azure Cosmos DB
+                dotnet add package System.Net.Http
+                dotnet add package System.Configuration
+                dotnet add package System.Configuration.ConfigurationManager
+                dotnet add package Microsoft.Azure.DocumentDB.Core
+                dotnet add package Newtonsoft.Json
+                dotnet add package System.Threading.Tasks
+                dotnet add package System.Linq
+                dotnet restore
+
+----Complete this exercise by going through steps give in Azure DP-200---> Section 4 ---> Module 3
+
+Step 3: Perform CRUD operations from code in Azure Cosmos DB account
+
+----Complete this exercise by going through steps give in Azure DP-200---> Section 4 ---> Module 3
+
+Step 4: Query using the Azure Cosmos DB .NET Core SDK
+
+----Complete this exercise by going through steps give in Azure DP-200---> Section 4 ---> Module 3
+
+Azure Cosmos DB uses SQL queries and LINQ queries
+
+  a) LINQ Query basics
+      LINQ is a .NET programming model that expresses computations as queries on streams of objects. You can create an IQueryable object that directly queries Azure Cosmos DB, which translates the LINQ query into an Azure Cosmos DB query. The query is then passed to the Azure Cosmos DB server to retrieve a set of results in JSON format. The returned results are deserialized into a stream of .NET objects on the client side. Many developers prefer LINQ queries, as they provide a single consistent programming model across how they work with objects in application code and how they express query logic running in the database.
+      Some basic LINQ queries are as follows,
+
+      input.Select(family => family.parents[0].familyName);
+      input.Select(family => family.children[0].grade + c); // c is an int variable
+      input.Select(family => new { name = family.children[0].familyName, grade = family.children[0].grade + 3});
+      input.Where(family=> family.parents[0].familyName == "Smith");
+
+Create and Run stored procedures from your app
+
+----Complete this exercise by going through steps give in Azure DP-200---> Section 4 ---> Module 3
