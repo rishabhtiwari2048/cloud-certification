@@ -1,0 +1,136 @@
+# Optimize the performance of Azure Cosmos DB by using partitioning and indexing strategies
+
+You can use Azure Cosmos DB to build highly responsive and highly available applications. Use Azure monitoring tools and database design options to help optimize performance and costs.
+
+In any scenario where you are using any Azure Cosmos DB based solution, you can look for following 3 metrics to measure and tune performance of your database
+1) Total requests made per second, and the proportion of requests rejected because the provisioned throughput is exceeded
+2) Total throughput, measured in Request Units per second (RU/s), and the distribution of throughput across partitions
+3) Total storage, measured in kilobytes (KB), and the distribution of data across partitions
+
+Measure the rate of data processing in Request Units
+  In Azure Cosmos DB, throughput is the rate at which data is processed. It's measured in Request Units (RUs). An RU is the amount of CPU, disk I/O, and memory required to read 1 KB of data in 1 second. Other operations like reading more data, writing data, or querying data take more RUs. The greater the demand on the underlying physical resources, the higher the number of RUs used.
+
+Maximum RUs that you need
+  When you provision Azure Cosmos DB account, you can select maximum throughput your database will need. The throughput is measured in RU/second and the value selected while provisioning should be greater than sum of RU/second required by all database operations. If database operations exceed this throughput limit, the requests to the database are throttled.
+
+Billing based on capacity that you have configured
+  RUs are billed on an hourly basis, whether you consume them or not. The amount that you're charged for your Azure Cosmos DB collection is fixed. It's based only on the configured capacity in RUs.
+
+=====================================================================================================
+****************************************EXERCISE*****************************************************
+=====================================================================================================
+
+Create and populate your Azure Cosmos DB collection
+
+  Step 1: Create your Cosmos DB database
+          az cosmosdb create \
+            --name rishabhtiwari2048
+            --resource-group learn-34e61629-735d-47a1-b24c-75baaab9f6ba
+
+/*VERY VERY IMPORTANT*/
+Azure Cosmosdb Concepts
+
+    A) Resources :- An Azure Cosmos DB account is a container for one or more databases. An Azure Cosmos DB database is a container for one or more collections. A collection contains documents. A document is an unstructured set of key/value pairs, read and written in JSON format.
+    Which means, Cosmos DB has following hierarchy.
+
+  Cosmosdb Account ---CONTAINS--> Databases ---CONTAINS--> Collections ---CONTAINS--> JSON Documents
+
+    B) Partitioning :- Partitioning is the distribution and grouping of your data across the underlying resources. Documents are grouped in a partition based on the value of the partition key. You specify the partition key when you create the collection. You choose how to partition your data at design time.
+    /*IMPORTANT*/ ---> The partitioning configuration can't be changed after a collection is provisioned.
+
+    C) Indexing :- An index is a catalog of document properties and their values. It includes links to documents that contain properties equal to each property value. Indexing makes searching a collection more efficient. But the search efficiency is balanced with the resources required to insert or change a document. When a document is inserted or changed, Azure Cosmos DB has to update the index. The optimal indexing strategy for your collection depends on your workload.
+
+    /*IMPORTANT*/ ---> Unlike partitioning, you can change indexing at runtime.
+
+Step 2: Set environment variables for endpoint and keys
+
+    a) After the database is created, run the following command to store its endpoint in an environment variable.
+    export ENDPOINT=$(az cosmosdb list \
+                --resource-group learn-34e61629-735d-47a1-b24c-75baaab9f6ba \
+                --output tsv \
+                --query [0].documentEndpoint)
+
+    b) Run the following command to store the access key in an environment variable.
+    export KEY=$(az cosmosdb keys list \
+                --resource-group learn-34e61629-735d-47a1-b24c-75baaab9f6ba  \
+                --name rishabhtiwari2048 \
+                --output tsv \
+                --query primaryMasterKey)
+
+Step 3: Create your database and collections
+
+      a) Create a database called mslearn in your Azure Cosmos DB account. We need only one database for these exercises
+        az cosmosdb sql database create \
+            --resource-group learn-34e61629-735d-47a1-b24c-75baaab9f6ba \
+            --account-name $NAME \
+            --name mslearn
+
+      b) Create the three collections with name small, HotPartition and Orders
+
+      /*IMPORTANT: Please remember Collections == Containers*/
+
+      az cosmosdb sql container create \
+        --name small \
+        --account-name $NAME \
+        --database-name mslearn \
+        --resource-group learn-34e61629-735d-47a1-b24c-75baaab9f6ba \
+        --partition-key-path /id \
+        --throughput 400
+
+      az cosmosdb sql container create \
+          --name HotPartition \
+          --account-name $NAME \
+          --database-name mslearn \
+          --resource-group learn-34e61629-735d-47a1-b24c-75baaab9f6ba \
+          --partition-key-path /Item/Category \
+          --throughput 7000
+
+      az cosmosdb sql container create \
+          --name Orders \
+          --account-name $NAME \
+          --database-name mslearn \
+          --resource-group learn-34e61629-735d-47a1-b24c-75baaab9f6ba \
+          --partition-key-path /Item/id \
+          --throughput 7000
+
+Step 4: Populate your collections using C# console application. Make sure your environment variables for ENDPOINT and KEY are correct before proceeding
+
+        a) Clone the console application repository from GitHub. Run the following command in the sandbox environment.
+           git clone https://github.com/MicrosoftDocs/mslearn-monitor-azure-cosmos-db
+
+        b) Change into application's directory
+           cd mslearn-monitor-azure-cosmos-db/ExerciseCosmosDB
+
+        c) Check your environment variables for ENDPOINT and PRIMARY KEY
+
+        d) Populate small collection by executing following command
+
+            dotnet run -- -c Small -o InsertDocument -n 4000 -p 10
+
+            here -c denotes collection to use which is small right now
+                 -o denotes The name of the task to run which is InsertDocument right now
+                 -n denotes number of times opertion should be performed which is 4000 right now
+                 -p denotes degree of parallelism involved which is 10 right now. Higher the number more is the demand on collection.
+
+        e) Populate HotPartition collection by executing following command,
+
+            dotnet run -- -c HotPartition -o InsertDocument -n 20000 -p 10
+
+        f) Populate Orders collection by executing following command,
+
+            dotnet run -- -c Orders -o InsertDocument -n 20000 -p 10
+
+Monitor and Measure your Azure CosmosDB database
+
+    a) Measuring throughput in Azure Cosmos DB
+
+        1) Review metrics for your database through Azure Portal
+              Take a look on total number of HTTP 429 error codes. This means that collection was overloaded and there were too many requests. When you see HTTP 429 responses from Azure Cosmos DB, that means you've exceeded the allocated capacity.
+
+              If the demand on one or more of your collections exceeds its allocated capacity, you have the following options to fix an overloaded collection:
+
+              Increase the overloaded collection's capacity.
+              Reduce the demand on your collection.
+              Increase the efficiency of the operations that overload your collection.
+
+Measure the throughput that individual queries require by using Data Explorer
