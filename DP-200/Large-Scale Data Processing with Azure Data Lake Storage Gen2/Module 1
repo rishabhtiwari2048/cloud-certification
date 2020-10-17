@@ -1,0 +1,64 @@
+# Introduction to Azure Data Lake Storage
+
+Understand Azure Data Lake Storage Gen 2
+  A data lake is a repository of data that is stored in its natural format, usually as blobs or files. Azure Data Lake Storage is a comprehensive, scalable, and cost-effective data lake solution for big data analytics built into Azure.
+  Azure Data Lake Storage combines a file system with a storage platform to help you quickly identify insights into your data. Data Lake Storage Gen2 builds on Azure Blob storage capabilities to optimize it specifically for analytics workloads. This integration enables analytics performance, the tiering and data lifecycle management capabilities of Blob storage, and the high-availability, security, and durability capabilities of Azure Storage.
+
+Following are the different benefits that Azure Data Lake Gen 2 offers,
+
+Hadoop Compatible Access
+  A benefit of Data Lake Storage Gen2 is that you can treat the data as if it's stored in a Hadoop Distributed File System. With this feature, you can store the data in one place and access it through compute technologies including Azure Databricks, Azure HDInsight, and Azure Synapse Analytics without moving the data between environments.
+
+Security
+  Data Lake Storage Gen2 supports access control lists (ACLs) and Portable Operating System Interface (POSIX) permissions. You can set permissions at a directory level or file level for the data stored within the data lake. This security is configurable through technologies such as Hive and Spark, or utilities such as Azure Storage Explorer. All data that is stored is encrypted at rest by using either Microsoft or customer-managed keys.
+
+  /*POSIX*/ : Portable Operating System Interface
+
+Performance
+  Azure Data Lake Storage organizes the stored data into a hierarchy of directories and subdirectories, much like a file system, for easier navigation. As a result, data processing requires less computational resources, reducing both the time and cost.
+
+Data Redundancy
+  Data Lake Storage Gen2 takes advantage of the Azure Blob replication models that provide data redundancy in a single data center with locally redundant storage (LRS), or to a secondary region by using the Geo-redundant storage (GRS) option. This feature ensures that your data is always available and protected if catastrophe strikes
+
+Exercise : Create an Azure Data Lake Storage Account using Azure Portal
+=====================================================================================================
+                                        EXERCISE
+=====================================================================================================
+
+Step 1: Sign in to the Azure portal
+
+Step 2: Select Create a resource and navigate to Storage.
+
+Step 3: In Featured, select Storage account - blob, file, table, queue as shown in the following screenshot.
+
+Step 4: Next, in the Create storage account window, under the Basics tab, define a storage account name. Set the location to Central US.
+
+Step 5: In the Account kind drop-down list, select StorageV2 (general-purpose v2) to create a Data Lake Storage Gen2 data store.
+
+Step 6: Select the Advanced tab. Next to the option of Hierarchical namespace, make sure that the Data lake storage gen2(preview) option is set to Enabled as shown below.
+
+Compare Azure Data Lake Store to Azure Blob storage
+  In Azure Blob storage, you can store large amounts of unstructured ("object") data, in a single hierarchy, also known as a flat namespace. You can access this data by using HTTP or HTTPs. Azure Data Lake Storage Gen2 builds on blob storage and optimizes I/O of high-volume data by using hierarchical namespaces that you turned on in the previous exercise.
+
+  Hierarchical namespaces organize blob data into directories and stores metadata about each directory and the files within it. This structure allows operations, such as directory renames and deletes, to be performed in a single atomic operation. Flat namespaces, by contrast, require several operations proportionate to the number of objects in the structure. Hierarchical namespaces keep the data organized, which yields better storage and retrieval performance for an analytical use case and lowers the cost of analysis.
+
+Azure Blob Storage vs Azure Data Lake Storage
+  If you want to store data without performing analysis on the data, set the Hierarchical Namespace option to Disabled to set up the storage account as an Azure Blob storage account. You can also use blob storage to archive rarely used data or to store website assets such as images and media.
+  If you are performing analytics on the data, set up the storage account as an Azure Data Lake Storage Gen2 account by setting the Hierarchical Namespace option to Enabled. Because Azure Data Lake Storage Gen2 is integrated into the Azure Storage platform, applications can use either the Blob APIs or the Azure Data Lake Storage Gen2 file system APIs to access data.
+
+Understand the stages for processing big data by using Azure Data Lake Store
+
+  There are four stages of Big Data Processing that are common in all the Big Data Architectures
+
+  1) Ingestion : The ingestion phase identifies the technology and processes that are used to acquire the source data. This data can come from files, logs, and other types of unstructured data that must be put into the Data Lake Store. The technology that is used will vary depending on the frequency that the data is transferred. For example, for batch movement of data, Azure Data Factory may be the most appropriate technology to use. For real-time ingestion of data, Apache Kafka for HDInsight or Stream Analytics may be an appropriate technology to use.
+
+  2) Store : The store phase identifies where the ingested data should be placed. In this case, we're using Azure Data Lake Storage Gen2.
+
+  3) Prep and Train : The prep and train phase identifies the technologies that are used to perform data preparation and model training and scoring for data science solutions. The common technologies that are used in this phase are Azure Databricks, Azure HDInsight or Azure Machine Learning Services.
+
+  4) Model and Serve :  Finally, the model and serve phase involves the technologies that will present the data to users. These can include visualization tools such as Power BI, or other data stores such as Azure Synapse Analytics, Azure Cosmos DB, Azure SQL Database, or Azure Analysis Services. Often, a combination of these technologies will be used depending on the business requirements.
+
+IMPORTANT
+  Examine uses for Azure Data Lake Storage Gen2
+
+Note: Please go through the use cases that are given in this module and understand how does the Architecture relates to actual implementation.
