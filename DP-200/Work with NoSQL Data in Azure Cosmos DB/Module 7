@@ -134,3 +134,90 @@ Monitor and Measure your Azure CosmosDB database
               Increase the efficiency of the operations that overload your collection.
 
 Measure the throughput that individual queries require by using Data Explorer
+
+    b) Calculated required throughput based on your query operations
+      --It is an exercise which we have to perform
+
+
+Identify a partition strategy for your azure cosmos data
+
+Important Note: Documents with the same partition key value are always located on the same logical partition. (Not Physical).A partition supports a fixed maximum amount of storage and Request Units (RUs). When the capacity of a logical partition gets close to the maximum storage, Azure Cosmos DB allocates another physical partition.
+
+Avoiding Hot partitions
+
+The provisioned throughput of your CosmosDB is evenly distributed among partitions. Selection of wrong partitioning key can lead to Hot partitions. A hot partition is accessed more than other partitions
+
+Partition Design Considerations.
+
+You can design partitions based on following major Considerations,
+
+Estimate the scale of your data needs
+
+    What's the approximate size of your documents, or range of sizes?
+    What's the required throughput in number of reads per second and writes per second?
+    What's the volume of documents being queried?
+
+Understand the workload
+
+    Do you have a read-heavy or write-heavy workload, or both?
+    If it's read-heavy, what are the top five queries?
+    If it's write-heavy, do you need transactions?
+
+Propose some partition key options
+
+    Does the key choice have a large number of possible values or large cardinality?
+    Do the values have a consistent spread across the data?
+    Are some values accessed more than others?
+    For read-heavy workloads, can the query be within a single partition?
+    For write-heavy transactional workloads, can the transaction be within a single partition?
+
+Important: Please look at the monitoring section of this module where we identify problems with Paritioning key and Hot Partition.
+
+Identify indexing strategies for your Azure Cosmos DB data
+  An index is extra information that sits alongside a collection to make querying more efficient. Queries use the index to locate documents.
+  The index is updated every time a document is updated or added to a collection. That update adds to the Request Units used for each write operation.
+
+IMPORTANT : By default, all document properties in Azure Cosmos DB are indexed.
+
+Indexing Modes
+  The three indexing modes that you can use with Azure Cosmos DB are,
+
+    a) Consistent : The index is updated synchronously every time a new document is written to the collection. New queries on the collection use the updated index right away. Query results are consistent with the updated documents in the collection.
+
+    b) Lazy :The index is updated at a lower priority. The reads and writes from the collection take a higher priority. In lazy mode, writes are cheaper because the index isn't updated immediately. When the index is fully updated depends on the demands on the collection. Query results don't include the updated documents until the index is consistent with the collection.
+
+    c) None :No index is created. Queries are expensive on collections that aren't indexed. If you're using your Azure Cosmos DB collection to read records directly rather than querying the collection, it's possible to avoid the overhead of indexing.
+
+Changing the indexing strategy
+  You can change the index configuration at any time:
+    a)  If you add properties to the index configuration, Azure Cosmos DB parses your collections and updates the index. The index uses more storage.
+    b) If you reduce the number of properties from the index, Azure Cosmos DB removes this information from your index. The index uses less storage.
+
+Adding document properties to the index
+
+    To include a document property in the index, you add its path to the index configuration. For example:
+      a) To include the Customer Email property in the index, add Customer/Email/? to the includedPaths array.
+      b) To exclude a property, add it to the excludedPaths array.
+
+Exercise - Measure the impact of index policy choice
+====================================================================================================
+                                EXERCISE
+====================================================================================================
+  To demonstrate index monitoring and tuning, we'll use the collections that we set up in Unit 2 and modify the indexing configuration. This means, we are going to use the same setup which we built for creating traffic on CosmosDB colletions.
+
+  Step 1: Update following environment variables if your Azure CLI session times out
+    COSMOS_NAME
+    KEY
+    ENDPOINT
+
+  Step 2: Run the following command to update the collection index to none.
+    az cosmosdb sql container update \
+    --resource-group learn-c884a995-3fa1-4df1-b1fa-9b7c30e5b486 \
+    --account-name $COSMOS_NAME \
+    --database-name mslearn \
+    --name Orders \
+    --idx @IndexConfig/index-none.json
+
+  Similary, use different index strategies and measure the cost of querying a document and inserting a new document in the partition. After this, you will get the chart showing cost of each operaation in RU based on the indexing strategies.
+
+IMPORTANT: Visit this chart once while revising and memorize it so that it is helpful.
