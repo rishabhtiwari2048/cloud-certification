@@ -37,5 +37,56 @@ Conflict Resolution
       A} Last-Writer-Wins (LWW), in which conflicts are resolved based on the value of a user-defined integer property in the document. By default _ts is used to determine the last written document. Last-Writer-Wins is the default conflict handling mechanism.
 
       B} Custom - User-defined function, in which you can fully control conflict resolution by registering a User-defined function to the collection. A User-defined function is a special type of stored procedure with a specific signature. If the User-defined function fails or does not exist, Azure Cosmos DB will add all conflicts into the read-only conflicts feed they can be processed asynchronously.
-      
+
       C} Custom - Async, in which Azure Cosmos DB excludes all conflicts from being committed and registers them in the read-only conflicts feed for deferred resolution by the user’s application. The application can perform conflict resolution asynchronously and use any logic or refer to any external source, application, or service to resolve the conflict.
+
+Exercise - Change global read and write priorities
+
+=====================================================================================================
+                                          EXERCISE
+=====================================================================================================
+
+If you enable multi-region writes when creating the Azure Cosmos DB account, every region is both read and write. So if a regional failure happens the SDK will redirect to the next closest region and this region supports both read and write requests. So the concept of automatic and manual failover is applicable to single-region write account only.
+
+Failover Basics
+  In the rare event of an Azure regional outage or data center outage, Azure Cosmos DB automatically triggers failovers of all Azure Cosmos DB accounts with a presence in the affected region.
+
+  What happens if a read region has outage?
+  Azure Cosmos DB accounts with a read region in one of the affected regions are automatically disconnected from their write region and marked offline. The Azure Cosmos DB SDKs implement a regional discovery protocol that allows them to automatically detect when a region is available and redirect read calls to the next available region in the preferred region list. If none of the regions in the preferred region list is available, calls automatically fall back to the current write region. No changes are required in your application code to handle regional failovers. During this entire process, consistency guarantees continue to be honored by Azure Cosmos DB.
+  Once the affected region recovers from the outage, all the affected Azure Cosmos DB accounts in the region are automatically recovered by the service. Azure Cosmos DB accounts that had a read region in the affected region will then automatically sync with current write region and turn online. The Azure Cosmos DB SDKs discover the availability of the new region and evaluate whether the region should be selected as the current read region based on the preferred region list configured by the application. Subsequent reads are redirected to the recovered region without requiring any changes to your application code.
+
+  What happens if a write-region has an outage?
+  If the affected region is the current write region and automatic failover is enabled for the Azure Cosmos DB account, then the region is automatically marked as offline. Then, an alternative region is promoted as the write region for the affected Azure Cosmos DB account.
+  During automatic failovers, Azure Cosmos DB automatically chooses the next write region for a given Azure Cosmos DB account based on the specified priority order. Applications can use the WriteEndpoint property of DocumentClient class to detect the change in write region.
+  Once the affected region recovers from the outage, all the affected Azure Cosmos DB accounts in the region are automatically recovered by the service.
+
+  Set read-region priorities
+  The following steps apply when you have a single-region write Azure Cosmos DB account. If you enabled multi-region writes when you created your Azure Cosmos DB account, you can't complete the following steps.
+  In the Azure portal, on the Replicate data globally screen, click Automatic Failover. Automatic failover is only enabled if the database has already been replicated to more than one region.
+  On the Automatic Failover screen, change Enable Automatic Failover to ON.
+  In the Read regions section, click the left portion of the East US row, and then drag and drop at the top position.
+  Click the left portion of the Japan East row, and then drag and drop to the second position.
+  Click OK.
+
+Choose a consistency level
+  Azure Cosmos DB allows developers to choose between five well-defined consistency models along the consistency spectrum – strong, bounded staleness, session, consistent prefix, and eventual. These consistency levels enable you to maximize the availability and performance of your database, depending on your needs. For cases when data must be processed in a specific order, strong consistency might be the right choice. Or for cases when data doesn't need to be immediately consistent, eventual consistency might be the right choice.
+
+Consistency Basics
+  Each database account has a default consistency level, which determines the consistency of data within the account. At one end of the spectrum is Strong consistency, which offers a linearizability guarantee with the reads guaranteed to return the most recent version of an item. At the other end of the spectrum is Eventual consistency, which guarantees that in absence of any further writes, the replicas within the group eventually converge. In the middle is Session consistency, which is the most popular because it guarantees monotonic reads, monotonic writes, and read your own writes (RYW) guarantees.
+
+  Guarantees about each consistency level are listed in the following table.
+  Consistency levels and guarantees
+  Consistency Level	                                                     Guarantees
+Strong	                                               Linearizability. Reads are guaranteed to return the most recent version of an item.
+Bounded Staleness	                                     Consistent Prefix. Reads lag behind writes by at most k prefixes or t interval.
+Session (Default Option)                               Consistent Prefix. Monotonic reads, monotonic writes, read-your-writes, write-follows-reads.
+Consistent Prefix	                                      Updates returned are some prefix of all the updates, with no gaps.
+Eventual	                                              Out of order reads.
+
+You can configure the default consistency level on your Azure Cosmos DB account (and later override the consistency on a specific read request) in the Azure portal. Internally, the default consistency level applies to data within the partition sets, which may span regions.
+In Azure Cosmos DB, reads served at session, consistent prefix and eventual consistency are twice as cheap, in terms of request unit consumption, as reads with strong or bounded staleness consistency.
+
+Use of consistency levels
+  About 73% of Azure Cosmos DB tenants use session consistency and 20% prefer bounded staleness. Approximately 3% of Azure Cosmos DB customers experiment with various consistency levels initially before settling on a specific consistency choice for their application. Only 2% of Azure Cosmos DB tenants override consistency levels on a per request basis.
+
+/*IMPORTANT*/ : Azure Cosmos DB account with Multi-region writes enabled do no support Strong Consistency Model.
