@@ -1,13 +1,10 @@
 1) Explore Data Types
   There are two broad categories
     a. Structured
-        Structured data storage requires definition of schema before the data is stored. It is accessed using
-        T-SQL. If the data requirement changes, you have to change the entire structure of tables
+        Structured data storage requires definition of schema before the data is stored. It is accessed using T-SQL. If the data requirement changes, you have to change the entire structure of tables
 
     b. Non-structured
-        Examples of non-structured data include binary, audio, and image files. This type of data is stored in
-        NoSQL systems. In NoSQL systems, Schema is not designed while loading data rather it is defined at query
-        time.
+        Examples of non-structured data include binary, audio, and image files. This type of data is stored in NoSQL systems. In NoSQL systems, Schema is not designed while loading data rather it is defined at query time.
         There are total 4 types of NoSQL storage provided by open source platforms.
         1) Key Value stores
         2) Document stores
@@ -21,13 +18,13 @@
         3) Azure Queue: A messaging store for reliable messaging between application components
         4) Azure Table: A NoSQL store for no-schema storage of structured data
 
-    Ideal for situation where you want to store the data but do not query it that often
+    Ideal for situation where you want to store the data but do not query it that often.
 
     Azure provides REST APIs in multiple languages to access the data in Azure Blob.
 
     Azure also supports scripting in Azure PowerShell and Azure CLI
 
-    You can use Azure Data Factory, Azure Storage Explorer, AzCopy tool, PowerShell and Visual Studio. If you areuploading a file with size greater than 2GB then you must either use Azure PowerShell or Visual Studio.
+    You can use Azure Data Factory, Azure Storage Explorer, AzCopy tool, PowerShell and Visual Studio. If you are uploading a file with size greater than 2GB then you must either use Azure PowerShell or Visual Studio.
 
     AzCopy can handle file with maximum 1TB size. It automatically splits files if size exceeds 200 GB
 
@@ -69,8 +66,7 @@
       d) Cassendra API (Columnar Store)
       e) Table API (Key Value Store)
 
-    You should use Azure Cosmos DB when you want to deploy a NoSQL based solution with high SLA, low latency and planet wide
-    performance. When provisioned correctly it can give response time of below 10 milli-seconds anywhere in the world.
+    You should use Azure Cosmos DB when you want to deploy a NoSQL based solution with high SLA, low latency and planet wide performance. When provisioned correctly it can give response time of below 10 milli-seconds anywhere in the world.
     It provides 99.999% uptime in SLA.
 
     It supports multiple consistency levels,
@@ -105,8 +101,7 @@
       f) Compliance Certification
 
 6) Understand Azure Synapse Analytics (Formerly Azure Data Warehouse)
-    Azure Synapse Analytics is a cloud-based data platform that brings together enterprise data warehousing and Big Data
-    analytics. It can process massive amounts of data and answer complex business questions with limitless scale.
+    Azure Synapse Analytics is a cloud-based data platform that brings together enterprise data warehousing and Big Data analytics. It can process massive amounts of data and answer complex business questions with limitless scale.
 
     MPP - Massively parallel processing allows you to scale compute nodes independently of storage.
     DMS - Data Movement Service coordinates and transports data between compute nodes.
@@ -131,8 +126,7 @@
 
     You can query data in Azure Stream Analytics you can use Stream Analytics query language. It is very much similar to SQL language.
 
-    Azure Stream Analytics provides data security on transport layer between device and IoT hub. It uses shared key to secure data transfer. If you are storing data then in that case the storage service will
-    provide data security.
+    Azure Stream Analytics provides data security on transport layer between device and IoT hub. It uses shared key to secure data transfer. If you are storing data then in that case the storage service will provide data security.
 
 8) Understand Azure HDInsight
     It allows us to ingest, process and analyze big data. It supports data science, warehousing, IoT and batch processing.
