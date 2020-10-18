@@ -1,0 +1,52 @@
+# Upload data to Azure Data Lake
+
+Exercise - Create an Azure Storage account for Azure Data Lake Storage
+=====================================================================================================
+                                      EXERCISE
+=====================================================================================================
+
+Step 1: Create a Resource Group
+
+Step 2: Create a Data Lake Storage Account
+
+Exercise - Use Azure Storage Explorer to upload data to Azure Storage
+
+=====================================================================================================
+                                      EXERCISE
+=====================================================================================================
+
+To do ad-hoc data transfers into an Azure Data Lake store, use Azure Storage Explorer.
+
+Storage Explorer is a free application for Windows, macOS, and Linux. This Azure app is designed to manage unstructured data such as tables, blobs, queues, and files. It also supports data in Azure Cosmos DB and Azure Data Lake Storage Gen2. That's why we'll use it in this exercise.
+
+You can do following operations within your Azure Data Lake using Azure Storage Explorer
+
+Step 1: Download and Install Azure Storage Explorer
+
+Step 2: Connect to your Azure Storage Account by passing your account credentials
+
+Step 3: Create hierarchical file system by creating folders
+
+Step 4: Upload files into data lake
+
+Step 5: Download files from data lake
+
+Exercise - Use Azure Data Factory to copy data from Data Lake Storage Gen1 to Data Lake Storage Gen2
+=====================================================================================================
+                                        EXERCISE
+=====================================================================================================
+Azure Data Factory is a cloud-based data integration service that creates workflows in the cloud. These workflows orchestrate batch data movement and transformations. Use Data Factory to create and schedule workflows (called pipelines) to ingest data from various data stores.
+
+Step 1: Provision a data factory in your Azure Subscription
+
+Step 2: Provision a Data Lake Storage Gen1 account
+
+Step 3: Create and Upload a sample file in Data Lake Gen 1 using Azure Storage Explorer
+
+Step 4: Set permissions for the Data Lake Storage Gen1 account. Provide owner access
+
+Step 5: Load data into the Data Lake Storage Gen2 account
+
+Step 6: Configure Azure Data Factory V2 and use it to copy data from Azure Data Lake Gen1 to Azure Data Lake Gen 2.
+
+/*IMPORTANT*/ : Go through this exercise one more time before appearing in exams.
