@@ -1,0 +1,52 @@
+# Secure your storage account
+
+Explore Azure Storage Security Features
+
+  Azure storage provide following high level security benefits for the data in cloud
+
+  Protect the data at rest
+  Protect the data in transit
+  Support browser cross-domain access
+  Control who can access data
+  Audit storage access
+
+a) Encryption at rest
+    Data stored in Azure Storage account is automatically encrypted using Storage Service Encryption (SSE) using 256 bit advanced encryption standard (AES) cipher. The data decryption is done automatically without any extra charge. This setup can not be disabled.
+
+    For virtual machines (VMs), Azure lets you encrypt virtual hard disks (VHDs) by using Azure Disk Encryption. This encryption uses BitLocker for Windows images, and it uses dm-crypt for Linux.
+
+    Azure Key Vault stores the keys automatically to help you control and manage the disk-encryption keys and secrets. So even if someone gets access to the VHD image and downloads it, they can't access the data on the VHD.
+
+b) Encryption in transit
+    Keep your data secure by enabling transport-level security between Azure and the client. Always use HTTPS to secure communication over the public internet.
+
+c) CORS Support
+    CORS stands for Cross Origin Resource Sharing. CORS uses HTTP headers so that a web application at one domain can access resources from a server at a different domain. By using CORS, web apps ensure that they load only authorized content from authorized sources. It is an optional feature which can be enabled by the users.
+
+d) RBAC
+    RBAC stands for Role Based Access Control. Azure Storage supports Azure Active Directory and role-based access control (RBAC) for both resource management and data operations.
+    /*IMPORTANT*/ Active Directory is supported for data operations on Blob and Queue storage.
+
+
+e) Auditing Access
+     You can audit Azure Storage access by using the built-in Storage Analytics service.
+
+Understand Storage Account Keys
+
+    In Azure Storage accounts, shared keys are called storage account keys. Azure creates two of these keys (primary and secondary) for each storage account you create. The keys give access to everything in the account.
+
+Understand shared access signatures
+    For untrusted clients, use a shared access signature (SAS). A shared access signature is a string that contains a security token that can be attached to a URI
+
+    Types of shared access signatures (SAS)
+      There are two types of shared access signatures,
+        a) Service Level SAS - You can use a service-level shared access signature to allow access to specific resources in a storage account.
+        b) Account level SAS - Use an account-level shared access signature to allow access to anything that a service-level shared access signature can allow, plus additional resources and abilities.
+
+Allowing access to your storage accounts
+
+Understand advanced threat protection for Azure Storage
+
+/*IMPORTANT*/ advanced Threat Protection for Azure Storage is available for the Blob service.
+
+Explore Azure Data Lake storage security Features
