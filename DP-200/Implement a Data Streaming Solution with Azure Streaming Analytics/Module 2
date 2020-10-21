@@ -1,0 +1,73 @@
+# Transform data by using Azure Stream Analytics
+
+Understand the streaming analytics workflow
+    In Azure Stream Analytics, a job is a unit of execution. A Stream Analytics job pipeline consists of three parts:
+      An input that provides the source of the data stream.
+      A transformation query that acts on the input. For example, a transformation query could aggregate the data.
+      An output that identifies the destination of the transformed data.
+
+Exercise - Create an Azure Stream Analytics job
+=======================================================================================================
+                                        EXERCISE
+=======================================================================================================
+Please refer Unit 3 of this Module.
+
+Exercise - Configure the Azure Stream Analytics job input
+=======================================================================================================
+                                        EXERCISE
+=======================================================================================================
+An Azure Stream Analytics job supports three input types:
+
+A) Azure Event Hub :- Azure Event Hubs consumes live streaming data from applications with low latency and high throughput.
+
+B) Azure IoT Hub :- Azure IoT Hub consumes live streaming events from IoT devices. This service enables bidirectional communication so that commands can be sent back to IoT devices. Commands trigger specific actions based on the analyzing streams the devices send to the service.
+
+C) Azure Blob Storage :- Azure Blob storage serves as the input source to consume files that are persisted in blob storage.
+
+/*IMPORTANT NOTE*/: Azure Data Lake Storage Gen 2 can also serve as an input source for the stream analytics jobs.
+
+Please refer Unit 4 of this Module.
+
+Exercise - Configure the Azure Stream Analytics job output
+=======================================================================================================
+                                        EXERCISE
+=======================================================================================================
+Stream Analytics jobs support various output sinks, such as Azure Blob storage, SQL Database, and Event Hubs. The documentation lists all output types.
+
+In this exercise, we'll use Blob storage as the output sink for our Stream Analytics job.
+
+Please refer unit 5 of the Module.
+
+Exercise - Write an Azure Stream Analytics transformation query
+=======================================================================================================
+                                        EXERCISE
+=======================================================================================================
+An Azure Stream Analytics query transforms an input data stream and produces an output. Queries are written in a language like SQL that's a subset of the Transact-SQL (T-SQL) language.
+
+In this exercise, we'll transform the input data in a simple way to demonstrate the transformation-query capabilities that Stream Analytics exposes.
+
+Please refer Unit 6 of the Module.
+
+Exercise - Start an Azure Stream Analytics job
+=======================================================================================================
+                                        EXERCISE
+=======================================================================================================
+Please refer unit 7 of the Module
+
+Exercise - View the results from an Azure Stream Analytics job
+=======================================================================================================
+                                        EXERCISE
+=======================================================================================================
+Please refer unit 8 of the Module
+
+Monitor and troubleshoot Azure Stream Analytics jobs
+  Monitoring is a key part of any mission-critical workload. It helps to proactively detect and prevent issues that might otherwise cause application or service downtime.
+
+  You can monitor Azure Stream Analytics jobs by using several tools:
+
+  An activity log for each running job
+  Real-time dashboards that show service and application health trends
+  Alerts on issues in applications or services
+  Diagnostic logs
+
+  /*IMPORTANT*/ :- Stream Analytics Diagnostic logs are turned off by default.
