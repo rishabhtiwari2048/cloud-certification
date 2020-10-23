@@ -1,0 +1,152 @@
+# Import data into Azure Synapse Analytics by using PolyBase
+
+One of the key benefits of using Azure Synapse Analytics is the fast loading of data. Importing data can be either a manual process that requires an understanding of PolyBase and the necessary steps to transfer data. More commonly however, you will use a data ingestion tool such as Azure Data Factory to schedule this data movement on a regular basis. Once understood, the loading of Terabytes or even Petabytes of data can take minutes instead of hours.
+
+
+Introduction to PolyBase
+  The data warehouse component of Azure Synapse Analytics service is a relational big data store that uses a massively parallel processing (MPP) architecture. It takes advantage of the on-demand elastic scale of Azure compute and storage resources to load and process petabytes of data. With SQL Data Warehouse, you get quicker access to the critical information you need to make good business decisions.
+  A key feature of Azure Synapse Analytics is that you pay for only the processing you need. You can decide how much parallelism is needed for your work. You also can pause the compute nodes when it's not in use. In this way, you pay for only the CPU time you use
+  Azure Synapse Analytics supports many loading methods. These methods include non-PolyBase options such as BCP and the SQL Bulk Copy API. The fastest and most scalable way to load data is through PolyBase. PolyBase is a technology that accesses external data stored in Azure Blob storage, Hadoop, or Azure Data Lake Store via the Transact-SQL language.
+
+Use PolyBase to extract, load, and transform data
+  Follow these steps to implement a PolyBase extract, load, and transform process for SQL Data Warehouse:
+
+  1. Extract the source data into text files.
+  2. Load the data into Azure Blob storage, Hadoop, or Azure Data Lake Store.
+  3. Import the data into SQL Data Warehouse staging tables by using PolyBase.
+  4. Transform the data (optional).
+  5. Insert the data into production tables.
+
+/*Important: In order to use PolyBase as a method to load data into data warehouse from external data sources you have to define three objects
+1. External Data Source (In order to get connection information)
+2. File Format (This defines how is the data stored in the external data source)
+3. Destination Data Source (To load the data into it)
+
+You can also use data ingestion tools like Azure Data Factory in order to use PolyBase without having the need to right any code.
+*/
+
+Exercise - create a blank Azure Synapse Analytics
+=====================================================================================================
+                                          EXERCISE
+=====================================================================================================
+Please refer unit 3 of Module 3
+
+Exercise - create a blob container for the source data
+=====================================================================================================
+                                          EXERCISE
+=====================================================================================================
+Please refer unit 4 of Module 3
+
+Exercise - upload data to an Azure Blob storage container
+=====================================================================================================
+                                          EXERCISE
+=====================================================================================================
+PolyBase can read data from several file formats and data sources. Before you upload your data into Azure Synapse Analytics, you must prepare the source data into an acceptable format for PolyBase. These formats include:
+    Comma-delimited text files (UTF-8 and UTF-16).
+    Hadoop file formats, such as RC files, Optimized Row Columnar (ORC) files, and Parquet files.
+    Gzip and Snappy compressed files.
+If the data is coming from a relational database, such as Microsoft SQL Server, pull the data and then load it into an acceptable data store, such as an Azure Blob storage account. Tools such as SQL Server Integration Services can ease this transfer process.
+
+Please refer unit 5 of Module 3 for more information
+
+Exercise - retrieve the URL and access key for the storage account
+=====================================================================================================
+                                          EXERCISE
+=====================================================================================================
+Clients and applications must be authenticated to connect to an Azure Blob storage account. There are several ways to do this. The easiest approach for trusted applications is to use the storage key. Since we're managing the import process, let's use this approach.
+
+We need two pieces of information to connect PolyBase to the Azure Storage account:
+
+  The URL of the storage account
+  The private storage key
+Use the Azure portal to get both of these values.
+
+  Access Key CSxPVfacDGYqEvvHPRhk1QfRIkqeset8mKLqrSmtYqqXpSgkA2gr1DhnuwzqcD5tBZZpFVykrixkPP44LqCdIA==
+  URL https://dwhstoragert2048.blob.core.windows.net/datafiles
+
+  Please refer unit 6 of Module 3 for more information
+
+Exercise - import data from blob storage to Azure Synapse Analytics by using PolyBase
+=====================================================================================================
+                                          EXERCISE
+=====================================================================================================
+
+Steps that you need to follow in order to use Polybase to import data in Data warehouse
+
+1. Login to your target database
+
+2. Create database credentials to secure connection with Azure Blob Storage. Use following method to do it from Query Editor in SQL Server.
+IMPORTANT--> Create a master key first, and then use this key to encrypt the database-scoped credential named dwhstoragert2048Credential.
+
+CREATE MASTER KEY;
+
+CREATE DATABASE SCOPED CREDENTIAL dwhstoragert2048Credential
+WITH
+    IDENTITY = 'dwhstoragert2048',
+    SECRET = 'CSxPVfacDGYqEvvHPRhk1QfRIkqeset8mKLqrSmtYqqXpSgkA2gr1DhnuwzqcD5tBZZpFVykrixkPP44LqCdIA==';
+
+3. Create an external data source connection
+  Use the database-scoped credential to create an external data source named AzureStorage. Note the location URL point to the container named data-files that you created in the blob storage. The type Hadoop is used for both Hadoop-based and Azure Blob storage-based access.
+
+  CREATE EXTERNAL DATA SOURCE AzureStorage
+WITH (
+    TYPE = HADOOP,
+    LOCATION = 'wasbs://datafiles@dwhstoragert2048.blob.core.windows.net/',
+    CREDENTIAL = dwhstoragert2048Credential
+);
+
+4. Define the import file format
+  Define the external file format named sample. This name indicates to PolyBase that the format of the text file is DelimitedText and the field terminator is a comma.
+
+  CREATE EXTERNAL FILE FORMAT TextFile
+WITH (
+    FORMAT_TYPE = DelimitedText,
+    FORMAT_OPTIONS (FIELD_TERMINATOR = ',')
+);
+
+5. Create a temporary table
+  Create an external table named dbo.temp with the column definition for your table. At the bottom of the query, use a WITH clause to call the data source definition named AzureStorage, as previously defined, and the file format named TextFile, as previously defined. The location denotes that the files for the load are in the root folder of the data source.
+
+  /*IMPORTANT NOTE :- External tables are in-memory tables that don't persist onto the physical disk. External tables can be queried like any other table.*/
+
+  /*IMPORTANT :- The table definition must match the fields defined in the input file. There are 12 defined columns, with data types that match the input file data.*/
+
+  -- Create a temp table to hold the imported data
+      CREATE EXTERNAL TABLE dbo.Temp (
+          [Date] datetime2(3) NULL,
+          [DateKey] decimal(38, 0) NULL,
+          [MonthKey] decimal(38, 0) NULL,
+          [Month] nvarchar(100) NULL,
+          [Quarter] nvarchar(100) NULL,
+          [Year] decimal(38, 0) NULL,
+          [Year-Quarter] nvarchar(100) NULL,
+          [Year-Month] nvarchar(100) NULL,
+          [Year-MonthKey] nvarchar(100) NULL,
+          [WeekDayKey] decimal(38, 0) NULL,
+          [WeekDay] nvarchar(100) NULL,
+          [Day Of Month] decimal(38, 0) NULL
+      )
+      WITH (
+          LOCATION='../',
+          DATA_SOURCE=AzureStorage,
+          FILE_FORMAT=TextFile
+      );
+
+6. Create Destination Table
+    Create a physical table in the SQL Data Warehouse database. In the following example, you create a table named dbo.StageDate. The table has a clustered column store index defined on all the columns. It uses a table geometry of round_robin by design because round_robin is the best table geometry to use for loading data.
+
+    -- Load the data from Azure Blob storage to SQL Data Warehouse
+    CREATE TABLE [dbo].[StageDate]
+    WITH (
+        CLUSTERED COLUMNSTORE INDEX,
+        DISTRIBUTION = ROUND_ROBIN
+    )
+    AS
+    SELECT * FROM [dbo].[Temp];
+
+7. Add statistics onto columns to improve query performance
+    As an optional step, create statistics on columns that feature in queries to improve the query performance against the table.
+    -- Create statistics on the new data
+    CREATE STATISTICS [DateKey] on [StageDate] ([DateKey]);
+    CREATE STATISTICS [Quarter] on [StageDate] ([Quarter]);
+    CREATE STATISTICS [Month] on [StageDate] ([Month]);
