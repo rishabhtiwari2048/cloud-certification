@@ -1,0 +1,104 @@
+# Describe Azure Databricks
+
+Explain Azure Databricks
+  Azure Databricks is a fully-managed, cloud-based Big Data and Machine Learning platform, which empowers developers to accelerate AI and innovation by simplifying the process of building enterprise-grade production data applications. Built as a joint effort by the team that started Apache Spark and Microsoft, Azure Databricks provides data science and engineering teams with a single platform for Big Data processing and Machine Learning.
+
+Optimized Environment
+  To address the problems seen on other Big Data platforms, Azure Databricks was optimized from the ground up, with a focus on performance and cost-efficiency in the cloud. The Databricks Runtime adds several key capabilities to Apache Spark workloads that can increase performance and reduce costs by as much as 10-100x when running on Azure, including:
+
+    1)  High-speed connectors to Azure storage services, such as Azure Blob Store and Azure Data Lake
+    2)  Auto-scaling and auto-termination of Spark clusters to minimize costs
+    3)  Caching
+    4)  Indexing
+    5)  Advanced query optimization
+
+  By providing an optimized, easy to provision and configure environment, Azure Databricks gives developers a performant, cost-effective platform that enables them to spend more time building applications, and less time focused on managing clusters and infrastructure.
+
+What is Databricks offer that is not open-source Spark?
+  1)  Databricks Workspace - Interactive Data Science & Collaboration
+  2)  Databricks Workflows - Production Jobs & Workflow Automation
+  3)  Databricks Runtime
+  4)  Databricks I/O (DBIO) - Optimized Data Access Layer
+  5)  Databricks Serverless - Fully Managed Auto-Tuning Platform
+  6)  Databricks Enterprise Security (DBES) - End-To-End Security & Compliance
+
+What is Apache Spark?
+  Spark is a unified processing engine that can analyze big data using SQL, machine learning, graph processing, or real-time stream analysis.
+
+Azure Databricks
+  s a compute engine, Azure Databricks sits at the center of your Azure-based software platform and provides native integration with Azure Active Directory (Azure AD) and other Azure services.
+
+Scala, Python, Java, R, SQL
+  Besides being able to run in many environments, Apache Spark makes the platform even more approachable by supporting multiple languages like Scala, Java, Python, R, SQL
+
+/*IMPORTANT*/ :- With the DataFrames API, the performance differences between languages are nearly nonexistence (especially for Scala, Java & Python).
+
+Create an Azure Databricks workspace and cluster
+  When talking about the Azure Databricks workspace, we refer to two different things. The first reference is the logical Azure Databricks environment in which clusters are created, data is stored (via DBFS), and in which the server resources are housed. The second reference is the more common one used within the context of Azure Databricks. That is the special root folder for all of your organization's Databricks assets, including notebooks, libraries, and dashboards, as shown below:
+
+Deploy an Azure Databricks Workspace
+
+  1. Go to Azure Portal
+  2. Click 'Create a Resource'
+  3. Search for Databricks
+  4. On the Azure Databricks page select Create
+  5. Provide the required values to create your Azure Databricks workspace:
+  6. Select review + create
+  7. Select create
+
+What is a cluster ?
+  The notebooks are backed by clusters, or networked computers, that work together to process your data. The first step is to create a cluster.
+
+Create a cluster
+  1. When your Azure Databricks workspace creation is complete, select the link to go to the resource.
+  2. Select Launch Workspace to open your Databricks workspace in a new tab.
+  3. In the left-hand menu of your Databricks workspace, select Clusters.
+  4. Select Create Cluster to add a new cluster.
+  5. Enter a name for your cluster. Use your name or initials to easily differentiate your cluster from your coworkers.
+  6. Select the Databricks RuntimeVersion. We recommend the latest runtime and Scala 2.11.
+  7. Specify your cluster configuration. While on the 14 day free trial, the defaults will be sufficient. When the trial is ended, you may prefer to change Min Workers to zero. That will allow the compute resources to shut down when you are not in a coding exercise and reduce your charges.
+    Hint: Check with your local system administrator to see if there is a recommended default cluster at your company to use for the rest of the class. This could save you some money!
+  8. Select Create Cluster.
+
+Understand Azure Databricks notebooks
+  After creating your Databricks workspace, it's time to create your first notebook. To execute your notebook, you will attach the cluster you created in the previous unit.
+
+What is Apache Spark Notebook?
+  A notebook is a collection of cells. These cells are run to execute code, to render formatted text, or to display graphical visualizations.
+
+Create a Notebook
+  1. In the Azure portal, click All resources menu on the left side navigation and select the Databricks workspace you created in the last unit.
+
+  2. Select Launch Workspace to open your Databricks workspace in a new tab.
+
+  3. On the left-hand menu of your Databricks workspace, select Home.
+
+  4. Right-click on your home folder.
+
+  5. Select Create.
+
+  6. Select Notebook.
+
+  7. Name your notebook First Notebook.
+
+  8. Set the Language to Python.
+
+  9. Select the cluster to which to attach this notebook.
+
+  10. Select create
+
+/*IMPORTANT*/ :This option displays only when a cluster is currently running. You can still create your notebook and attach it to a cluster later.
+
+Attach and Detach your Notebook
+    You can do following operations while working with your notebook on clusters
+    a) Detach your notebook from the cluster
+    b) Restart the cluster
+    c) Attach to another cluster
+    d) Open the Spark UI
+    e) View the log files of the driver
+
+Exercise: Work with Notebooks
+=====================================================================================================
+                                          EXERCISE
+=====================================================================================================
+Please refer Unit 5 of Module 1
