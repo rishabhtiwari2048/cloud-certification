@@ -79,7 +79,7 @@ Create a Notebook
 
   6. Select Notebook.
 
-  7. Name your notebook First Notebook.
+  7. Name your notebook First Notebook. /*IMPORTANT*/ : The file type of Databricks notebooks is DBC
 
   8. Set the Language to Python.
 
