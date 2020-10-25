@@ -1,0 +1,93 @@
+# Work with Dataframes in Azure Databricks
+
+Describe a Dataframe
+  Please go through Module 4 from Microsoft Learn account. This module is entirely based on usage of Azure Databricks notebooks and all the concepts are explained in those notebooks only.
+  These notebooks are very important from certification point of view so practice thoroughly while preparing for exams.
+
+We can use dbutils.fs.ls() to view our data on the DBFS.
+path = source + "/wikipedia/pagecounts/staging_parquet_en_only_clean/"
+files = dbutils.fs.ls(path)
+display(files)
+/*To display the files*/
+
+To read parquet files into a spark dataframe we use following code snippet
+
+parquetDir = source + "/wikipedia/pagecounts/staging_parquet_en_only_clean/"
+parquetDF = (spark  #instance of SparkSession
+             .read  #DataFrameReader
+             .parquet(parquetDir) #Returns an instance of DataFrame)
+
+Use common DataFrame methods
+
+  cache() and persist()
+    The ability to cache data is one technique for achieving better performance with Apache Spark.This is because every action requires Spark to read the data from its source (Azure Blob, Amazon S3, HDFS, etc.) but caching moves that data into the memory of the local executor for "instant" access.
+    cache() is just an alias for persist().
+
+To cache the data into local memory of Executor, we can use following code snippet
+
+    (pagecountsEnAllDF
+    .cache()         # Mark the DataFrame as cached
+    .count()         # Materialize the cache
+  )
+
+/*NOTE*/ : And as a quick side note, you can remove a cache by calling the `DataFrame`'s `unpersist()` method but, it is not necessary.
+
+We can use printSchema() method with our DataFrame in order to check the type of data that we have.
+pagecountsEnAllDF.printSchema()
+
+Use the display function
+  show(n=20, truncate=True, vertical=False) :- Prints the first n rows to the console.
+
+  display(<dataframe_name>) :-
+  display(pagecountsEnAllDF)
+
+limit() :- Returns a new Dataset by taking the first n rows
+    limitedDF = pagecountsEnAllDF.limit(5) # "limit" the number of records to the first 5
+
+    limitedDF # Python hack to force printing of the data type
+    limitedDF.show(100, False) #show up to 100 records and don't truncate the columns
+    display(limitedDF) # defaults to the first 1000 records
+
+select() :-Returns a new Dataset by computing the given Column expression for each element.
+# Transform the data by selecting only three columns
+onlyThreeDF = (pagecountsEnAllDF
+  .select("project", "article", "requests") # Our 2nd transformation (4 >> 3 columns)
+)
+# Now let's take a look at what the schema looks like
+onlyThreeDF.printSchema()
+display(onlyThreeDF)
+
+drop(): Returns a new Dataset with a column dropped.
+# Transform the data by selecting only three columns
+droppedDF = (pagecountsEnAllDF
+  .drop("bytes_served") # Our second transformation after the initial read (4 columns down to 3)
+)
+# Now let's take a look at what the schema looks like
+droppedDF.printSchema()
+
+distinct() and dropDuplicates() : Returns a new Dataset that contains only the unique rows from this Dataset.
+distinctDF = (pagecountsEnAllDF     # Our original DataFrame from spark.read.parquet(..)
+  .select("project")                # Drop all columns except the "project" column
+  .distinct()                       # Reduce the set of all records to just the distinct column.
+)
+display(distinctDF)
+
+/*IMPORTANT: dropDuplicates(columns...)
+
+The method dropDuplicates(..) has a second variant that accepts one or more columns.
+The distinction is not performed across the entire record unlike distinct() or even dropDuplicates().
+The distinction is based only on the specified columns.
+This allows us to keep all the original columns in our DataFrame.*/
+
+DataFrame vs SQL vs TempView
+
+To create a temporary view from the table use following code snippet
+pagecountsEnAllDF.createOrReplaceTempView("pagecounts")
+
+%sql
+
+SELECT * FROM pagecounts
+
+To convert results from SQL to a DataFrame use following code snippet
+tableDF = spark.sql("SELECT DISTINCT project FROM pagecounts ORDER BY project")
+display(tableDF)
