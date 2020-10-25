@@ -1,0 +1,56 @@
+# Work with Dataframe columns in Azure Databricks
+
+Describe the column class
+  The Column class is an object that encompasses more than just the name of the column, but also column-level-transformations, such as sorting in a descending order.
+
+  orderBy() and sort()
+    - Returns a new Dataset sorted by the given expressions.
+    - Like orderBy(..) there are two variants of these two methods:
+         orderBy(Column)
+         orderBy(String)
+         sort(Column)
+         sort(String)
+
+         For Example
+
+         sortedDF = (pagecountsEnAllDF
+                      .orderBy("requests")
+                    )
+         sortedDF.show(10, False)
+
+  col() :- This is used to create a column object.
+      column = col("requests").desc()
+
+/*Important*/ :- We must use following col() along with orderBy in order to sort the data in ascending or descending order.
+
+        sortedDescDF = (pagecountsEnAllDF
+          .orderBy( col("requests").desc() )
+        )
+        sortedDescDF.show(10, False) # The top 10 is good enough for now
+
+Work with column expressions
+  filter() and where()
+    filter(..) and where(..) are aliases for each other.
+    Filters rows using the given condition.
+
+    whereDF = (sortedDescDF
+    .where( "project = 'en'" ))
+    whereDF.show(10, False) # with SQL expressions
+
+    filteredDF = (sortedDescDF
+    .filter( col("project") == "en")
+
+    filteredDF.show(10, False)
+
+  first() and head()
+    Returns the first row.first() and head() are aliases for each other
+
+  collect()
+    Returns an array that contains all of Rows in this Dataset.
+
+  take(n)
+    Returns the first n rows in the Dataset.
+
+/*INSIGHTS*/ :- All the methods discussed above are associated with Spark not with Python
+
+/*IMPORTANT*/ :- Please revisit the python notebooks part of this module during revision and understand the syntax properly.
