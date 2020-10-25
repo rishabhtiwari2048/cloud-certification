@@ -58,3 +58,5 @@ UnsafeRow (Also known as Tungsten Binary Format)
             The benefit of using Spark 2.x's custom encoders is that you get almost the same compactness as Java serialization, but significantly faster encoding/decoding speeds. Also, for custom data types, it is possible to write custom encoders from scratch.
         Efficiency:
             Spark can operate directly out of Tungsten, without first deserializing Tungsten data into JVM objects.
+
+/*Important*/: Please look at the explanation on working of Tungsten Binary Format in shuffling from Unit 7 of Module 5.
