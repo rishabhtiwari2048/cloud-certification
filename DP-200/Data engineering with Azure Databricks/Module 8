@@ -1,0 +1,134 @@
+# Describe platform architecture, security, and data protection in Azure Databricks
+
+As part of learning in this unit, create following Azure Resources,
+  1) Azure Storage Account
+  2) Azure Key Vault
+  3) Azure Databricks
+
+Describe the Azure Databricks Platform Architecture
+  Azure Databricks is a fully-managed, cloud-based Big Data and Machine Learning platform, which empowers developers to accelerate AI and innovation by simplifying the process of building enterprise-grade production data applications. Built as a joint effort by Databricks and Microsoft, Azure Databricks provides data science and engineering teams with a single platform for Big Data processing and Machine Learning.
+
+  By combining the power of Databricks, an end-to-end, managed Apache Spark platform optimized for the cloud, with the enterprise scale and security of Microsoft's Azure platform, Azure Databricks makes it simple to run large-scale Spark workloads.
+
+  The Azure Databricks collaborative workspace enables these teams to work together through features such as user management, git source code repository integration, and user workspace folders.
+
+  Microsoft is working to integrate Azure Databricks closely with all features of the Azure platform. Below is a list of some of the integrations completed so far:
+
+  a) VM Types :- Many types of existing VMs like F,M and D series can be used in clusters.
+  b) Security and Privacy :- Ownership of the data is with customers
+  c) Flexibility in network topology :-  Azure Databricks supports deployments into virtual networks (VNETs)
+  d) Orchestration :- ELT and ETL workflows can be operationalize using Azure Data Factory
+  e) PowerBI :- Power BI can be connected directly to Databricks clusters using JDBC in order to query data interactively at massive scale using familiar tools.
+  f) Azure Active Directory :- Azure Databricks workspaces deploy into customer subscriptions, so naturally AAD can be used to control access to sources, results, and jobs.
+  g) Data stores: Azure Storage and Data Lake Store services are exposed to Databricks users via Databricks File System (DBFS) to provide caching and optimized analysis over existing data. Azure Databricks easily and efficiently uploads results into Azure Synapse Analytics, Azure SQL Database, and Azure Cosmos DB for further analysis and real-time serving, making it simple to build end-to-end data architectures on Azure.
+  h) Real-time analytics: Integration with IoT Hub, Azure Event Hubs, and Azure HDInsight Kafka clusters enables developers to build scalable streaming solutions for real-time analytics.
+
+/*IMPORTANT : Please revisit this unit in order to look at the diagrams for better understanding of Azure Databricks architecture*/
+
+Azure Databricks Platform Architecture
+  When you create an Azure Databricks service, a "Databricks appliance" is deployed as an Azure resource in your subscription. At the time of cluster creation, you specify the types and sizes of the virtual machines (VMs) to use for both the Driver and Worker nodes, but Azure Databricks manages all other aspects of the cluster.
+
+  The "Databricks appliance" is deployed into Azure as a managed resource group within your subscription. This resource group contains the Driver and Worker VMs, along with other required resources, including a virtual network, a security group, and a storage account. All metadata for your cluster, such as scheduled jobs, is stored in an Azure Database with geo-replication for fault tolerance.
+
+  Internally, Azure Kubernetes Service (AKS) is used to run the Azure Databricks control-plane and data-planes via containers running on the latest generation of Azure hardware (Dv3 VMs)
+
+  The diagram above shows a Control Plane on the left, which hosts Databricks jobs, notebooks with query results, the cluster manager, web application, Hive metastore, and security access control lists (ACLs) and user sessions. These components are managed by Microsoft in collaboration with Databricks and do not reside within your Azure subscription.
+
+  On the right-hand side is the Data Plane, which contains all the Databricks runtime clusters hosted within the workspace. All data processing and storage exists within the client subscription. This means no data processing ever takes place within the Microsoft/Databricks-managed subscription.
+
+
+/*SUPER SUPER INTERSTING AND IMPORTANT*/
+  /*Please open the unit and look for the last diagram on the bottom the unit 2. It explains internal architecture in detail*/
+
+  The diagram above shows a standard deployment that contains the boundaries between the Control Plane and the Data Plane with the Azure components deployed to each. At the top of the diagram is the Control Plane that exists within the Microsoft subscription. The customer subscription is at the bottom of the diagram, which contains the Data Plane and data sources.
+
+  A Microsoft-managed Azure Databricks workspace virtual network (VNet) exists within the customer subscription. Information exchanged between this VNet and the Microsoft-managed Azure Databricks Control Plane VNet is sent over a secure TLS connection through ports (22 and 5557) that are enabled by Network Security Groups (NSGs) and protected with port IP filtering.
+
+  The Blob Storage account provides default file storage within the workspace (databricks file system (DBFS)). This resource and all other Microsoft-managed resources are completely locked from changes made by the customer. All other resources within the customer subscription are customer-managed and can be added or modified per your Azure subscription permissions. Connectivity between these resources and the Databricks clusters that reside within the Data Plane is secured via TLS.
+
+  To clarify, you can write to the default DBFS file storage as needed, but you cannot change the Blob Storage account settings since the account is managed by the Microsoft-managed Control Plane. As a best practice, only use the default storage for temporary files and mount additional storage accounts (Blob Storage or Azure Data Lake Storage Gen2) that you create in your Azure subscription, for long-term file storage. This is because the default file storage is tied to the lifecycle of your Azure Databricks account. If you delete the Azure Databricks account, the default storage gets deleted with it.
+
+  If you need advanced network connectivity, such as custom VNet peering and VNet injection, you could deploy Azure Databricks Data Plane resources within your own VNet. We will cover this topic later.
+
+Perform Data Protection
+  Encryption at-rest – Service Managed Keys, User Managed Keys
+  Encryption in-transit (Transport Layer Security - TLS)
+  File/Folder Level access control lists (ACLs) for Azure Active Directory (AAD) Users, Groups, Service Principals
+  ACLs for Clusters, Folders, Notebooks, Tables, Jobs
+  Secrets with Azure Key Vault
+
+/*IMPORTANT :- Azure Databricks is a compute platform. It does not store data, except for notebooks. */
+/*IMPORTANT*/ :- Please read all the features of databricks for data security while doing revision and take important notes. #Perform Data Protection#
+
+Describe Azure key vault and Databricks security scopes
+  Azure Key Vault is used to Securely store and tightly control access to tokens, passwords, certificates, API keys, and other secrets. In addition, secrets that are stored in Azure Key Vault are centralized, giving the added benefits of only needing to update secrets in one place, such as an application key value after recycling the key for security purposes.
+
+/*IMPORTANT*/  Go through all notebooks diligently from the unit while revising. The code snippets are important to us
+
+Secure access with Azure IAM and authentication
+Azure role-based access control (RBAC) is the authorization system you use to manage access to Azure resources. To grant access, you assign roles to users, groups, service principals, or managed identities at a particular scope.
+
+Access control (IAM acronym for Identity and Access Management)  is the blade that you use to assign roles to grant access to Azure resources. It's also known as identity and access management and appears in several locations in the Azure portal.
+RBAC and IAM are both enabled by Azure Active Directory (Azure AD), an enterprise identity service that provides single sign-on and multi-factor authentication, which helps users securely sign in and access resources in:
+
+External resources, such as Microsoft 365, the Azure portal, and thousands of other SaaS applications.
+Internal resources, such as apps on your corporate network and intranet, along with any cloud apps developed by your own organization.
+
+SCIM Integration
+  Azure Databricks supports SCIM, or System for Cross-domain Identity Management, an open standard that allows you to automate user provisioning. SCIM lets you use Azure Active Directory to create users in Azure Databricks and give them the proper level of access, as well as remove access for users (deprovision them) when they leave the organization or no longer need access to Azure Databricks.
+
+  Customers can sync Azure Active Directory groups with Databricks groups using SCIM functionality. Using groups makes it easy to assign permissions to users in Databricks by applying them to groups instead of individuals if there are a lot of users.
+
+Conditional Access
+  Azure Databricks supports Azure Active Directory conditional access, which allows administrators to control where and when users are permitted to sign in to Azure Databricks. For example, conditional access policies can restrict sign-in to your corporate network or can require multi-factor authentication.
+
+Azure Active Directory token support
+  You can use Azure AD tokens to automate provisioning of Azure Databricks workspaces and access the Databricks REST API. Typically, a user needs to use a personal access token (JWT token) that a they create in the Azure Databricks workspace in order to access the Databricks REST API. The problem with using personal access tokens for the REST API is that your ability to create new tokens exists only after a workspace is created. Since the Azure Databricks workspace creation can only occur within the Azure portal, it is difficult to perform end-to-end automation without using Azure Active Directory tokens. This means that, if you want to automate creating an Azure Databricks workspace, then within that workspace, use the REST API to automate creating users, clusters, jobs, etc., you would first need to create the workspace in the portal, then sign in to the workspace to create the first personal access token.
+
+  However, if you want to automate provisioning an Azure Databricks workspace and use the Databricks API in a completely non-interactive way through scripting, you can accomplish this by first creating an enterprise Azure AD application and adding a user to the application and an Azure Databricks workspace. In addition, you will need to enable user impersonation user_impersonation delegated API access in the Azure AD application, as shown in the screenshots below:
+
+Describe security
+
+  Network Security
+    VNet Peering : VNet peering is a mechanism that connects two virtual networks (VNets) in the same region through the Azure backbone network. Once peered, the two virtual networks appear as one for all connectivity purposes.VNet peering is only required if using the standard deployment without VNet injection.
+
+  VNet Injection : If you're looking to do specific network customizations, you could deploy Azure Databricks data plane resources in your own VNet. In this scenario, instead of using the managed VNet, which restricts you from making changes, you "bring your own" VNet where you have full control. Azure Databricks will still create the managed VNet, but it will not use it.
+
+      Features enabled through VNet injection include:
+
+          On-Premises Data Access
+          Single-IP SNAT and Firewall-based filtering via custom routing
+          Service Endpoint
+
+/*IMPORTANT*/ :- If your Azure Databricks workspace is deployed to your own virtual network (VNet), you can use custom routes, also known as user-defined routes (UDR), to ensure that network traffic is routed correctly for your workspace.
+
+Secure Connectivity to Azure Data services
+  Your Azure Databricks deployment likely includes other Azure data services, such as Azure Blob Storage, Azure Data Lake Storage Gen2, Azure Cosmos DB, and Azure Synapse Analytics. We recommend ensuring traffic between Azure Databricks and Azure data services such as these remains on the Azure network backbone, instead of traversing over the public internet. To do this, you should use Azure Private Link or Service Endpoints.
+
+  Azure Private Link: Using Azure Private Link is currently the most secure way to access Azure data services from Azure Databricks. Private Link enables you to access Azure PaaS Services (for example, Azure Storage, Azure Cosmos DB, and SQL Database) and Azure hosted customer/partner services over a Private Endpoint in your virtual network. Traffic between your virtual network and the service traverses over the Microsoft network backbone, eliminating exposure from the public Internet. You can also create your own Private Link Service in your virtual network (VNet) and deliver it privately to your customers.
+
+  Azure VNet service endpoint : Virtual Network (VNet) service endpoints extend your virtual network private address space. The endpoints also extend the identity of your VNet to the Azure services over a direct connection. Endpoints allow you to secure your critical Azure service resources to only your virtual networks. Traffic from your VNet to the Azure service always remains on the Microsoft Azure network backbone.
+
+Complaince : In many industries, it is imperative to maintain compliance through a combination of following best practices in storing and handling data, and by using services that maintain compliance certifications and attestations.
+ Azure Databricks has the following compliance certifications:
+
+      HITRUST
+      AICPA
+      PCI DSS
+      ISO 27001
+      ISO 27018
+      HIPAA (Covered by MSFT Business Associates Agreement (BAA))
+      SOC2, Type 2
+
+Audit Logs : Databricks provides comprehensive end-to-end audit logs of activities performed by Databricks users, allowing your enterprise to monitor detailed Databricks usage patterns. Azure Monitor integration enables you to capture the audit logs and make then centrally available and fully searchable.
+
+ Services / Entities included are:
+
+    Accounts
+    Clusters
+    DBFS
+    Genie
+    Jobs
+    ACLs
+    SSH
+    Tables
