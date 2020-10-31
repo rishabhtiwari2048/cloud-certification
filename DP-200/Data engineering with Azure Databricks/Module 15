@@ -1,0 +1,49 @@
+#Describe Azure Databricks best practices
+
+1) Workspace Administration
+
+  Understand Workspace administrations best practices
+
+  Map workspaces to business divisions
+
+  Deploy workspaces to multiple subscriptions to honor Azure Databricks Capacity limits
+
+  Databricks Workspace limits
+   Key workspace limits are:
+
+    The maximum number of jobs that a workspace can create in an hour is 1000
+    At any time, you cannot have more than 150 jobs simultaneously running in a workspace
+    There can be a maximum of 150 notebooks or execution contexts attached to a cluster
+    There can be a maximum of 1500 Azure Databricks API calls/hour
+
+ Azure Subscription limits
+ Next, there are Azure limits to consider since ADB deployments are built on top of the Azure infrastructure.
+
+ Key Azure limits are:
+
+    Storage accounts per region per subscription: 250
+    Maximum egress for general-purpose v2 and Blob storage accounts (all regions): 50 Gbps
+    Virtual Machines (VMs) per subscription per region: 25,000
+    Resource groups per subscription: 980
+    These limits are at this point in time and might change going forward. Some of them can also be increased if needed. For more help in understanding the impact of these limits or options of increasing them, please contact Microsoft or Databricks technical architects.
+
+List security best practices
+  Consider isolating each workspace in its own VNet
+  Do not store any production data in Default Databricks Filesystem (DBFS) Folders
+  Always hide secrets in a key vault
+  Access control - Azure Data Lake Storage (ADLS) passthrough
+  Configure audit logs and resource utilization metrics to monitor activity
+  Querying VM metrics in Log Analytics once you have started the collection using the above document
+
+Describe tools and integration best practices
+  Favor cluster scoped init scripts over global and named scripts
+  Use cluster log delivery feature to manage logs
+
+Explain Databricks runtime best practices
+ Tune shuffle for optimal performance
+ Partition your data
+
+Understand Cluster best practices
+
+Cluster sizing starting point
+  
