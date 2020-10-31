@@ -6,3 +6,6 @@ Azure Databricks is an Apache Spark–based analytics platform that supports SQL
 
 Integrate with Azure Synapse analytics
    Complete notebook 1-Azure-Synapse-Analytics for getting idea about this unit.
+
+Integrate with Azure Cosmos DB
+   Complete notebook 2Cosmos-DB for getting idea about this unit.
