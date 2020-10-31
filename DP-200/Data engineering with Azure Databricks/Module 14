@@ -1,0 +1,8 @@
+# Integrate Azure Databricks with other Azure Services
+
+Azure Databricks is an Apache Spark–based analytics platform that supports SQL analytics and can be integrated with SQL Data Warehouse to run high-performance analytics. It allows faster interactive processing of batch and streaming data and has built-in functions for machine learning and big data processing.
+
+/*Important*/ : Go through the exercise of connecting Azure Databricks to other azure services given in the module.
+
+Integrate with Azure Synapse analytics
+   Complete notebook 1-Azure-Synapse-Analytics for getting idea about this unit.
