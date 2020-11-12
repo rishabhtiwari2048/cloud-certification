@@ -1,0 +1,36 @@
+Azure SQL Deployment Options
+  1) SQL Server on Virtual Machines :- Best for the applications that need OS level access (IaaS)
+      You are responsible for end to end management of the database. This includes OS patches and SQL Server patches
+  2) Managed Instance :- Best for lift and shift migrations to the cloud
+  3) Database :- Best for modern cloud applications
+
+You've now learned about the three main deployment options within Azure SQL: virtual machines, managed instances, and SQL Database. For SQL Database and SQL Managed Instance, there are additional options if you have multiple instances or databases. These options are referred to as elastic database pools. Elastic database pools allow you to share resources among multiple instances and databases and optimize your costs.
+
+1) SQL Database Elastic pools
+
+2) SQL Managed Instance pools
+
+Purchasing Models, Service Tiers and Hardware Choices
+
+  Purchasing Models
+    1) vCore Based
+    2) DTU Based (Not available in Managed Instance)
+
+  Service Tiers
+    1) General Purpose (Good for most of the workloads)
+    2) Business Critical (Good for the workloads requiring low latency and downtime)
+    3) Hyperscale (Good for the workloads that require highly scalable storage) (NOTE: It is available only for single databases in Azure SQL Database)
+
+If you choose General Purpose and the vCore-based model, you have an additional decision to make regarding the compute that you pay for:
+
+    Provisioned compute is meant for more regular usage patterns with higher average compute utilization over time, or for multiple databases that use elastic pools.
+
+    Serverless compute is meant for intermittent, unpredictable usage with lower average compute utilization over time. Serverless has autopause and resume capabilities with a time delay that you set. When your database is paused, you pay only for storage.
+
+Hardware
+   The default hardware generation at this time is referred to as Gen5 hardware.
+
+Management interfaces for Azure SQL
+  Azure Portal
+  SQL Server Management Studio
+  Azure Data Studio
