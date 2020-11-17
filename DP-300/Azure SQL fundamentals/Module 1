@@ -37,4 +37,10 @@ If you choose General Purpose and the vCore-based model, you have an additional 
 Hardware : The most recent hardware generation is referred to as Gen5 in Azure. Gen4 is also available in some cases but it will start getting phased out from 2020.
 
 Management interfaces for Azure SQL
+
+  1) Azure Portal
+  2) SSMS
+  3) Azure Data Studio (Has a powerful feature known as notebook)
+  4) Languages and APIs (T-SQL, REST)
+  5) Command Line Interfaces (sqlcmd, bcp)
   
