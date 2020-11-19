@@ -1,1 +1,56 @@
 Deploy and configure servers, instances, and databases for Azure SQL
+
+Plan, Deploy and Verify Azure SQL
+
+Pre-Deployment Planning
+  Before you start deploying things in Azure, it's important to understand what your requirements are and how they map to offerings in Azure SQL.
+
+Resource Limits
+  The Azure SQL introduction module discussed limits, rates, and capabilities (like IOPS or in-memory OLTP). But there are other resource limits that are affected by your choice of Azure SQL Managed Instance, Azure SQL Database, or options within these choices:
+
+  Memory
+  Max log size
+  Size of tempdb
+  Max concurrent workers
+  Backup retention
+
+  It's also important to know that Azure SQL resources have overall resource limits per subscription and per region. If you need to increase your limits, it's possible to request a quota increase in the Azure portal.
+
+Deployment
+
+  a) Server
+  b) Compute and Storage - vCores, Data Max Size
+  c) Networking Configuration
+  d) Data Source
+  e) Database Collation
+  f) Opt-in for Azure Defender
+
+Deployment considerations for various deployment options
+
+Azure Service Fabric (aka Azure Backbone)
+
+  Managed Instance :- Ring (Virtual Cluster) similar to SQL Server running on a virtual machine
+
+  Azure SQL Database :- Logical Server
+
+  Azure SQL Database - HyperScale :- Once you choose this service tier you can't go back to others
+
+Resource Governance : Although there's a multifaceted approach to governance in Azure SQL, primarily the following three technologies are used to govern your usage of resources in Azure SQL:
+
+  a) Windows Job Objects :  Job objects are used to govern the file's virtual memory commit, working set caps, CPU affinity, and rate caps. You can use the sys.dm_os_job_object dynamic management view to see the limits in place.
+  b) Resource Governer : Resource Governor is a SQL Server feature that helps users (and in this case, Azure) govern resources like CPU, physical I/O, and memory.
+  c) File Server Resource Manager : File Server Resource Manager is available in Windows Server and is used to govern file directory quotas, which are used to manage Data max size.
+
+Verification
+  You can run following queries to better understand status of your deployment.
+  SELECT @@VERSION
+  SELECT * FROM sys.databases
+  SELECT * FROM sys.objects
+  SELECT * FROM sys.dm_os_schedulers
+  SELECT * FROM sys.dm_os_sys_info
+  SELECT * FROM sys.dm_os_process_memory --Not supported in Azure SQL Database
+  SELECT * FROM sys.dm_exec_requests
+  SELECT SERVERPROPERTY('EngineEdition')
+  SELECT * FROM sys.dm_user_db_resource_governance -- Available only in Azure SQL Database and SQL Managed Instance
+  SELECT * FROM sys.dm_instance_resource_governance -- Available only in Azure SQL Managed Instance
+  SELECT * FROM sys.dm_os_job_object -- Available only in Azure SQL Database and SQL Managed Instance
