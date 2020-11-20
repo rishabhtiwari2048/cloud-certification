@@ -54,3 +54,71 @@ Verification
   SELECT * FROM sys.dm_user_db_resource_governance -- Available only in Azure SQL Database and SQL Managed Instance
   SELECT * FROM sys.dm_instance_resource_governance -- Available only in Azure SQL Managed Instance
   SELECT * FROM sys.dm_os_job_object -- Available only in Azure SQL Database and SQL Managed Instance
+
+============================================================================================================================
+Exercise :- Deploy Azure SQL Database
+============================================================================================================================
+
+Configure Azure SQL Database and Azure SQL Managed Instance
+
+Database Configuration
+
+Job management
+
+SQL Agent in SQL Managed Instance (Only supports T-SQL and SSIS jobs in SQL Managed Instance)
+Elastic Jobs for SQL Database (Azure SQL Database does not support Server agent. However, you can use Elastic Job agent service to create and schedule jobs)
+
+Azure Automation
+
+Restricted Configuration Choices (TAKE A LOOK ONCE AGAIN TO MAKE SURE YOU REMEMBER Restrictions that in place)
+
+Storage Management
+ For Azure SQL Managed Instance, there is a maximum storage allowed for the instance. The number of vCores affects the maximum storage. (For example, the Business Critical tier has a lower maximum storage.) If you reach the maximum, you might get Message 1105 for a managed database or Message 1133 for the instance.
+
+ The model database is a 100-Mb data file and an 8-Mb log file.
+
+ For Azure SQL Database, Data max size is the maximum possible size of a single database file, and only one is allowed. Maxsize for the database file (as defined by the sys.database_files.max_size column) can grow to Data max size.
+
+ To understand this idea of Data max size versus Maxsize, let's consider an example where a 1-TB (Data max size) General Purpose database is deployed. When you do this, your database requires only ~500 GB, not 1 TB. As your database grows and approaches Data max size, Maxsize for the database file will also grow up to the 1-TB level.
+
+ The transaction log is in addition to the data size. It's truncated regularly due to automatic backups because Accelerated Database Recovery is on by default. The log's maximum size is always 30 percent of Data max size. For example, if Data max size is 1 TB, then the maximum transaction log size is 0.3 TB, and the total of Data max size and log size is 1.3 TB.
+
+ The Azure SQL Database Hyperscale tier is different from the other service tiers in that it creates a database that's initially 40 GB and grows automatically in size to the limit of 100 TB. The transaction log has a fixed size restriction of 1 TB.
+
+Connectivity Architecture and Policy
+  For Azure SQL Managed Instance, you can choose the connection type or policy during the deployment. In Azure SQL Database, you can choose the connection type after deployment.
+
+  You can keep the default of Proxy for connections from outside and Redirect for connections within Azure or configure something else.
+
+  At the highest level, in Proxy mode, all connections are proxied through the gateway. In Redirect mode, after the connection is established and is using the gateway (redirect-find-db in the preceding figure), the connection can connect directly to the database or managed instance.
+
+==========================================================================================================================
+Exercise :- Configure Azure SQL Database
+==========================================================================================================================
+
+Load Data into Azure
+
+bcp Utility - Bulk Copy Program Utility
+  Bulk Copy Program (bcp) is a common tool for connecting to Azure SQL from on-premises, and for connecting to Azure SQL from an Azure virtual machine. You can then use it to move data into Azure SQL.
+
+Bulk Insert
+  Bulk insert operations are similar to what's available in SQL Server on-premises. But instead of loading data from a file (or multiple files) on your machine, you load data from Azure Blob storage.
+
+SSIS Packages
+  In Azure SQL, you can use packages to connect with SSIS on-premises. You can host an SSIS database in Azure SQL Database or Azure SQL Managed Instance. Additionally, you can use the Azure-SSIS Integration Runtime for SSIS packages with tools like Azure Data Factory.
+
+Other options
+  Other interesting options include using technologies like Spark or Azure Data Factory to load data into Azure SQL Database or Azure SQL Managed Instance.
+
+Important Note :  SQL Server on VM and Azure SQL Managed instance deployment options support natively restoring a database.
+
+==========================================================================================================================
+Exercise :- Load data into Azure SQL Database
+==========================================================================================================================
+
+1) Create Master Key
+2) Create Database Scoped Credentials for Connecting to Blob Storage using SAS
+3) Create External Data Source
+4) Create necessary destination Schema and tables
+5) Start loading data using bulk insert
+6) Validate data loading 
