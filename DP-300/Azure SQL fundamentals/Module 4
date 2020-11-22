@@ -31,7 +31,7 @@ Configure and Maintain performance
 
   Files and File Group :- Azure SQL Database has one database file and its maximum size is configurable through Azure interface. Hyperscale has more than one database file. There is no functionality of creating additional database files. Azure SQL Managed Instance supports adding database files and configuring sizes but not physical placement of files. In addition, user-defined filegroups are supported for SQL Managed Instance for manageability purposes.
 
-  MAXDOP Configuration :- Maximum degree of Parallalism is fully suppored in Azure SQL Database
+  MAXDOP Configuration :- Maximum degree of Parallalism is fully supported in Azure SQL Database
 
   Resource Governor :- Resource Governor is a feature in SQL Server that you can use to control resource usage for workloads through I/O, CPU, and memory. Note that for user-defined workload groups and pools, Resource Governor is supported for SQL Managed Instance, but not supported for Azure SQL Database.
 
@@ -74,3 +74,35 @@ Scenarios specific to Azure SQL :- Please visit unit 4 of this module
     Worker Limits
 
     Business Critical HADR waits
+
+============================================================================================================================
+Exercise - Monitor and troubleshoot performance
+============================================================================================================================
+
+Accelerate and Tune Performance
+
+  Scale CPU Capacity
+
+  I/O Performance (IOPS - Input Output Per Second)
+
+  Increase Memory or Workers
+
+  Improve Application Latency
+
+  Tune Like it is a SQL Server
+
+===========================================================================================================================
+Exercise - Scale the performance of your workload
+===========================================================================================================================
+
+===========================================================================================================================
+Exercise - Optimize application performance
+===========================================================================================================================
+
+Intelligent Performance
+
+  Intelligent Query Processing - Intelligent query processing (IQP) is a suite of new capabilities built into the query processor. You enable it by using the latest database compatibility level. Applications can gain performance by simply using the latest database compatibility level.
+
+  Automatic Plan Correction
+
+  Automatic Tuning
