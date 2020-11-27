@@ -1,0 +1,20 @@
+Protect data in transit or at rest
+
+  Describe the role of firewalls
+
+  Virtual Network endpoints
+
+  Explain encryption at rest
+
+  Transparent Data Encryption
+
+  Encryption at rest with MySQL and PostgreSQL
+
+  Azure Disk Encryption
+
+  Describe the role of Azure Key Vault in Transparent Data Encryption
+
+  Explain Object Encryption and Secure Enclave
+
+  Dynamic Data Masking
+Important Note: This module is very theoretical. It requires some background in database security, specially in Microsoft SQL Server. Please use google wherever you feel lost.
