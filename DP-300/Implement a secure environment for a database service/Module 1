@@ -1,0 +1,51 @@
+Configure Database authentication and authorization
+
+  Describe active directory and azure active directory
+
+  Describe authentication and identities
+
+  Describe security principals
+
+    Security Principals are entities that can request SQL Server resources and to which you can (usually) grant permissions.
+
+    Schemas and Securable
+
+    Login and Users
+
+    Database Roles
+
+    Application Roles
+
+    Built in database Roles
+
+  Describe database and object permissions
+
+    Tables and View permissions
+      SELECT
+      INSERT
+      UPDATE
+      DELETE
+      CONTROL
+      REFERENCES
+      TAKE OWNERSHIP
+      VIEW CHANGE TRACKING
+      VIEW DEFINTION
+
+    Function and Stored Procedure Permissions
+      ALTER
+      CONTROL
+      EXECUTE
+      VIEW CHANGE TRACKING
+      VIEW DEFINITON
+
+  Explain execute as a user
+
+      Ownership Chains
+
+  Explain the policy of least privilege
+
+============================================================================================================================
+EXERCISE : Authorize Access to Azure SQL Database with Azure Active Directory
+============================================================================================================================
+
+IMPORTANT NOTE: Before going for certification exam, please go through various built in roles of Azure SQL Database.
