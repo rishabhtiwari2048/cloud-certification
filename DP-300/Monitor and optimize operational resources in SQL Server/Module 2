@@ -1,0 +1,60 @@
+Explore causes of performance issues
+
+  Describe SQL Query Store : The Query Store can be thought of as a flight data recorder for SQL Server. It collects and permanently stores and aggregates performance information In older versions of SQL Server, this information was either transient or not collected at all.
+
+  Query Store Reports : SQL Server Management Studio offers a number of out of the box reports that allow you to quickly gather information from the Query Store.  You can reach this menu by using SQL Server Management Studio, clicking on a user database in Object Explorer, and clicking on the Query Store folder to expand it.
+
+  The built-in reports include:
+
+  Regressed Queries - This report shows any queries where execution metrics have degraded in the period of time of interest (last hour, day, and week). This report is useful for evaluating the impact of minor or major changes in server configuration or database schema.
+
+  Overall Resource Consumption - This report allows you to quickly observe the most impactful queries in your database. This report allows click through to the “Top Resource Consuming Queries” report, which allows you to gather execution plan information.
+
+  Top Resource Consuming Queries - This report shows the query and query plan for the most impactful queries in a database for a time period. This data allows you to observe if a query has multiple execution plans, and whether or not those plans have high variability in performance.
+
+  Queries with Forced Plans — This report contains information about plan forcing, and any plan forcing failures (a situation where a forced execution plan was not honored).
+
+  Queries with High Variation - This report showcases queries that have a high degree of variance between executions and can be sorted by any of the above execution metrics.
+
+  Query Wait Statistics - This report allows you to see waits statistics aggregated, and drill-through to get further information on queries that spent the most time waiting. Note that this wait information is aggregated and not as detailed as what you might observe in the sys.dm_os_wait_stats DMV.
+
+  Tracked Queries - This report is filtered by query_Id and allows you to view the performance of a specific query and its execution plans. You can manually enter a query_id or you can add queries from the regressed or top resource consuming query reports. The query_id can be captured from the catalog view sys.query_store_query.
+
+Performance overhead of the query store
+  Collecting data in any system has an execution cost of CPU cycles, memory, and disk utilization that is known as observer overhead. The Query Store is designed to minimize the impact of its data collection. Data for the Query Store in written to memory for each new query, and each execution of an existing query. If this information was written to disk for each execution, the performance overhead would be significant, so SQL Server uses a setting called DATA_FLUSH_INTERVAL_SECONDS to control the frequency of flushing the Query Store data to disk. By default, the data is flushed every 15 minutes, but this value is a user configurable setting per database.
+
+Plan forcing in the query store
+  This feature allows database administrator to force last known good execution plan for a query using query store while execution. This is useful in the cases where performance regression has occurred due to sudden change in execution plan of a query
+
+Describe blocking and locking in SQL Server
+  On SQL Server, blocking occurs when one process holds a lock on a specific resource (row, page, table, database), and a second process attempts to acquire a lock with an incompatible lock type on the same resource. Typically, locks are held for a very short period, and when the process holding the lock releases it, the blocked process can then acquire the lock and complete its transaction.
+
+  Locking is normal behavior and happens many times during a normal day. Locking only become a problem when it causes blocking that is not quickly resolved. There are two types of performance issues that can be caused by blocking:
+
+      A process holds locks on a set of resources for an extended period of time before releasing them. These locks cause other processes to block, which can degrade query performance and concurrency.
+
+      A process gets locks on a set of resources, and never releases them. This problem requires administrator intervention to resolve.
+
+  Another blocking scenario is deadlocking, which occurs when one transaction has a lock on a resource, and another transaction has a lock on a second resource. Each transaction then attempts to take a lock on the resource which is currently locked by the other transaction. Theoretically, this scenario would lead to an infinite wait, as neither transaction could complete. However, the SQL Server engine has a mechanism for detecting these scenarios and will kill one of the transactions in order to alleviate the deadlock, based on which transaction has performed the least of amount of work that would need to be rolled back. The transaction that is killed is known as the deadlock victim. Deadlocks are recorded in the system_health extended event session which is enabled by default.
+
+Isolation levels
+
+  The isolation levels in SQL Server are as follows:
+
+  Read uncommitted - This is the lowest isolation level available. Dirty reads are allowed, which means one transaction may see changes made by another transaction that have not yet been committed.
+
+  Read committed - This level allows a transaction to read data previously read, but not modified by another transaction with without waiting for the first transaction to finish. This level also releases read locks as soon as the select operation is performed. This is the default SQL Server level.
+
+  Repeatable Read - This level keeps read and write locks that are acquired on selected data until the end of the transaction.
+
+  Serializable - This is the highest level of isolation where transactions are completely isolated. Read and write locks are acquired on selected data and not released until the end of the transaction.
+
+  SQL Server also includes two isolation levels that include row-versioning.
+
+  Read Committed Snapshot - In this level read operations take no row or page logs, and the engine presents each operation with a transactionally consistent snapshot of the data as it existed at the start of the query. This level is typically used when users are running frequent reporting queries against an OLTP database, in order to prevent the read operations from blocking the write operations.
+
+  Snapshot - This level provides transaction level read consistency through row versioning. This level is vulnerable to update conflicts. If a transaction running under this level reads data modified by another transaction, an update by the snapshot transaction will be terminated and roll back. This is not an issue with read committed snapshot isolation.
+
+Monitoring for blocking problems
+
+Describe data file fragmentation
