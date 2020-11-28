@@ -1,0 +1,11 @@
+Implement compliance controls for sensitive data
+
+  Describe data classification
+    Data Discovery and Classification
+    sys.sensitivity_classification - catalog view that stores data classification metadata
+    Automatic data classification is based on column names
+
+  Describe advanced threat protection
+    Monitors activities on your database using audit logs and informs about potential attacks and security vulnerabilities
+
+  Describe SQL injection
