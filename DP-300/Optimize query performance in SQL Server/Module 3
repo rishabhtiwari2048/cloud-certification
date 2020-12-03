@@ -1,0 +1,51 @@
+Explore performance based design
+
+  Describe normalization
+    Database normalization is a design process used to organize a given set of data into tables and columns in a database. Each table should contain data relating to a specific ‘thing’ and only have data that supports that same ‘thing’ included in the table. The goal of this process is to reduce duplicate data contained within your database, to reduce the performance impact of database inserts and updates.
+
+    The most common forms of normalization are first, second, and third normal form and are described below.
+
+    First Normal Form: First normal form has the following specifications:
+
+        1) Create a separate table for each set of related data
+        2) Eliminate repeating groups in individual tables
+        3) Identify each set of related data with a primary key
+
+    Second Normal Form: Second normal form has the following specification, in addition to those required by first normal form:
+        1) If the table has a composite key, all attributes must depend on the complete key and not just part of it.
+
+    Third Normal Form: Third normal form is typically the aim for most OLTP databases. Third normal form has the following specification, in addition to those required by second normal form:
+
+        1) All nonkey columns are non-transitively dependent on the primary key.
+
+    The transitive relationship implies that one column in a table is related to other columns, through a second column. In the case of dependence, when you say that a column is dependent on another column, it means that the value of one can be derived from the other
+
+
+  Denormalization : While the third normal form is theoretically desirable, it is not always possible for all data. In addition, a normalized database does not always give you the best performance. Normalized data frequently requires multiple join operations to get all the necessary data returned in a single query. There is a tradeoff between normalizing data when the number of joins required to return query results has high CPU utilization, and denormalized data that has fewer joins and less CPU required, but opens up the possibility of update anomalies.
+
+  Note : Denormalized data is not the same as unnormalized. For denormalization, we start by designing tables that are normalized. Then we can add additional columns to some tables to reduce the number of joins required, but as we do so, we are aware of the possible update anomalies. We then make sure we have triggers or other kinds of processing that will make sure that when we perform an update, all the duplicate data is also updated.
+
+  Star Schema and Snowflake Schema
+
+Choose appropriate datatype
+
+Design Indexes : SQL Server has several index types to support different types of workloads. At a high level, an index can be thought of as an on-disk structure that is associated with a table or a view, that enables SQL Server to more easily find the row or rows associated with the index key (which consists of one or more columns in the table or view), compared to scanning the entire table.
+
+  Clustered Indexes :  A clustered index is the underlying table, stored in sorted order based on the key value. There can only be one clustered index on a given table, because the rows can be stored in one order. A table without a clustered index is called a heap, and heaps are typically only used as staging tables. An important performance design principle is to keep your clustered index key as narrow as possible. When considering the key column(s) for your clustered index you should consider columns that are unique or that contain many distinct values. Another property of a good clustered index key is for records that are accessed sequentially, and are used frequently to sort the data retrieved from the table. Having the clustered index on the column used for sorting can prevent the cost of sorting every time that query executes, because the data will be already stored in the desired order.
+
+  Nonclustered Indexes : Nonclustered indexes are a separate structure from the data rows. A nonclustered index contains the key values defined for the index, and a pointer to the data row that contains the key value. You can add additional nonkey columns to the leaf level of the nonclustered index to cover more columns using the included columns feature in SQL Server. You can create multiple nonclustered indexes on a table.
+
+  Both nonclustered and clustered indexes can be defined as unique, meaning there can be no duplication of the key values. Unique indexes are automatically created when you create a PRIMARY KEY or UNIQUE constraint on a table.
+
+  Another option SQL Server provides is the creation of filtered indexes. Filtered indexes are best suited to columns in large tables where a large percentage of the rows have the same value in that column.A practical example would be an employee table as shown below that stored the records of all employees, including ones who had left or retired.If in a table, there is a column called CurrentFlag, which indicates if an employee is currently employed. This example uses the bit datatype, indicating only two values, 1 for currently employed and 0 for not currently employed. A filtered index with a WHERE CurrentFlag = 1,on the CurrentFlag column would allow for efficient queries of current employees.
+
+  Columnstore Indexes : Columnstore indexes were introduced in SQL Server 2012 and offer improved performance for queries that run large aggregation workloads. This type of index was originally targeted at data warehouses, but over time columnstore indexes have been used in a number of other workloads in order to help solve query performance issues on large tables. As of SQL Server 2014, there are both nonclustered and clustered columnstore indexes. Like b-tree indexes, a clustered columnstore index is the table itself stored in a special way, and nonclustered columnstore indexes are stored independently of the table. Clustered columnstore indexes inherently include all the columns in a given table. However, unlike rowstore clustered indexes, clustered columnstore indexes are NOT sorted.
+
+Describe Data Compression : one of the key benefits to columnstore indexes is the ability to compress your data. In addition to columnstore compression, SQL Server offers a few other options for compressing data. While SQL Server still stores compressed data on 8 KB pages, when the data is compressed, more rows of data can be stored on a given page, which allows the query to read fewer pages. Reading fewer pages has a twofold benefit: it reduces the amount of physical IO performed and it allows more rows to be stored in the buffer pool, making more efficient use of memory. The tradeoffs to compression are that it does require a small amount of CPU overhead, however in most cases the storage IO benefits far outweigh any additional processor usage
+Compression is implemented in SQL Server at the object level. Each index or table can be compressed individually, and you have the option of compressing partitions within a partitioned table or index. You can evaluate how much space you will save by using the sp_estimate_data_compression_savings system stored procedure.
+
+  Row Compression : Row compression is fairly basic and does not incur much overhead; however, it does not offer the same amount of compression (measured by the percentage reduction in storage space required) that page compression may offer. Row compression basically stores each value in each column in a row in the minimum amount of space needed to store that value. It uses a variable-length storage format for numeric data types like integer, float, and decimal, and it stores fixed-length character strings using variable length format
+
+  Page Compression : Page compression is a superset of row compression, as all pages will initially be row compressed prior to applying the page compression. Then a combination of techniques called prefix and dictionary compression are applied to the data. Prefix compression eliminates redundant data in a single column, storing pointers back to the page header. After that step, dictionary compression searches for repeated values on a page and replaces them with pointers, further reducing storage. The more redundancy in your data, the greater the space savings when you compress your data.
+
+  Columnstore Archival Compression : Columnstore objects are always compressed, however, they can be further compressed using archival compression, which uses the Microsoft XPRESS compression algorithm on the data. This type of compression is best used for data that is infrequently read, but needs to be retained for regulatory or business reasons. While this data is further compressed, the CPU cost of decompression tends to outweigh any performance gains from IO reduction.
